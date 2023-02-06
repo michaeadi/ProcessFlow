@@ -12,7 +12,7 @@ jobs:
             curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
       - run:
           name: Login using your API key
-          command: postman login --with-api-key $PMAK-63e176afeaf3084e7d75cd49-7081ab8660919f5b24b29ecb0ee8610bc6
+          command: $PMAK-63e176afeaf3084e7d75cd49-7081ab8660919f5b24b29ecb0ee8610bc6
       - run: |
             postman collection run "3862417-ad545b67-9576-4372-bd12-aa68d104045d" -e "3862417-a283d708-a19a-4185-9545-1d5086a45ab4" --integration-id "132678-${CIRCLE_WORKFLOW_JOB_ID}"
 
