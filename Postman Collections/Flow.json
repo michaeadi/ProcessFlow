@@ -1,0 +1,1769 @@
+{
+	"info": {
+		"_postman_id": "f6ba9fe4-75ee-4b78-9dd0-01fb81df4ec6",
+		"name": "KYGProcessFlow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Process Flow",
+			"item": [
+				{
+					"name": "User registration Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2b462615-01d1-48fd-a55b-175decb95ac7",
+								"exec": [
+									"var min= 100; ",
+									"    var max= 999;  ",
+									"    var randomId =Math.floor(Math.random() * (max + min));",
+									"",
+									"var walk = \"michael\"+randomId+\"@gmail.com\";",
+									"var tFN = \"Michael\";",
+									"var tLN = \"test\";",
+									"",
+									"pm.environment.set(\"testEmail\", walk);",
+									"pm.environment.set(\"testFirstName\", tFN);",
+									"pm.environment.set(\"testLastName\", tLN);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "080f53dd-e2d4-4b9f-bef0-99d5cc0f897f",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"///Parsing the data from the response body",
+									"pm.environment.set('email',jsonData.user.email) ///user email",
+									"pm.environment.set('userid',jsonData.user.userid) //// User ID",
+									"pm.environment.set('languageid',jsonData.user.Language.LanguagesID) /// User Language ID",
+									"pm.environment.set('languagename',jsonData.user.Language.LanguageName) /// User Language Name",
+									"pm.environment.set('languagecode',jsonData.user.Language.LanguageCode) /// User Language Code",
+									"pm.environment.set('planid',jsonData.user.PlanID) /// Plan ID",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"",
+									"/////Parsing the Registration Token",
+									"",
+									"var regkey = body.token;",
+									"",
+									"",
+									"pm.environment.set(\"KYGREGAuth\", regkey)",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Access Token Generated Successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"/// Running Assertions on the Response Body",
+									"pm.test(\"Status Code is 201\", function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"Password is not created\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.eql(1);",
+									"});",
+									"",
+									"pm.test(\"user id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\" Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('languagename'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\" Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('languagecode'));",
+									"    ",
+									"});",
+									"",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "8101d38e-8f71-41f6-b9d5-f4c8286eb864",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"firstName\": \"{{testFirstName}}\",\n  \"lastName\": \"{{testLastName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/register"
+					},
+					"response": [
+						{
+							"id": "5df82612-25d0-4ef0-85ab-c02eeffb557f",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/authentication/register"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Email confirmation Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8a26ff4d-6cc7-4ad5-b3a3-c789d7754059",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "78e4de48-13ae-46f8-a785-f3e24538176b",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"//// Parsing the responsebody to placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID)/// Plan ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID) ///User Status ID",
+									"pm.environment.set('email',jsonData.user.email) ///User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID) /// Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) /// User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) /// User Status",
+									"pm.environment.set('userid',jsonData.user.userid) /// User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) /// Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) /// Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) /// Language Code",
+									"",
+									"var confirmkey = body.token;",
+									"",
+									"/////Running assertions on the responsebody",
+									"pm.environment.set(\"KYGConfirmEmailAuth\", confirmkey)",
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Confirm Email Access Token Generated Successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"pm.test(\"Status Code is 201\", function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Company Admin Status\", function(){",
+									"    pm.expect(jsonData.user.CompanyAdmin).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "793e69d9-3a33-4ce3-a811-f9ad1d1ceead",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{KYGREGAuth}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/confirm-email"
+					},
+					"response": [
+						{
+							"id": "cbdcfc5d-542a-4789-a901-0612e850c402",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/authentication/confirm-email"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "For adding password Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7ac7e42c-bf96-44a9-b539-7b824b4fbd2a",
+								"exec": [
+									"var pass = \"Pa55w@rd\";",
+									"",
+									"pm.environment.set(\"password\",pass);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "37179a86-69fd-4f87-aed0-826d6450955b",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"///Parsing data from responsebody to Placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID) ///Plan ID",
+									"pm.environment.set('languageid',jsonData.user.LanguageID) ///Language ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID)/// Status ID",
+									"pm.environment.set('email',jsonData.user.email) /// User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID) ///Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) ///User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) /// User Status",
+									"pm.environment.set('userid',jsonData.user.userid) ///User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) ///Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) ///Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) ///Language Code",
+									"pm.environment.set('userRoleID',jsonData.user.roles[0].RoleID) ///User Role ID",
+									"pm.environment.set('userRoleName',jsonData.user.roles[0].Name) /// User Role Name",
+									"pm.environment.set('roleLandingPage',jsonData.user.roles[0].LandingPage) /// User Landing Page",
+									"pm.environment.set('roleLandingPageID',jsonData.user.roles[0].LandingPageID) /// Role Landing Page ID",
+									"pm.environment.set('userLandingPageID',jsonData.user.landingPage.LandingPageID) /// User Landing Page ID",
+									"pm.environment.set('userLandingPageName',jsonData.user.landingPage.Name) ///User Landing Page Name",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"/// Parsing Assertions from the Response Body",
+									"pm.test(\"Status Code is 201\", function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Company Admin Status\", function(){",
+									"   pm.expect(jsonData.user.CompanyAdmin).to.eql(false); ",
+									"})",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.LanguageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.LanguageID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									"",
+									"pm.test(\"User Role ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.eql(pm.environment.get('userRoleID'));",
+									"});",
+									"",
+									"pm.test(\"User Role Name\", function(){",
+									"    pm.expect(jsonData.user.roles[0].Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].Name).to.eql(pm.environment.get('userRoleName'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.eql(pm.environment.get('roleLandingPage'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.eql(pm.environment.get('roleLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.eql(pm.environment.get('userLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page Name\", function(){",
+									"    pm.expect(jsonData.user.landingPage.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.landingPage.Name).to.eql(pm.environment.get('userLandingPageName'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "baad6e9b-b4e6-4b48-9578-9fa41ade27d7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGConfirmEmailAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/add-password"
+					},
+					"response": [
+						{
+							"id": "171279dd-ce0e-440e-a0ef-1d446a094a26",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/authentication/add-password"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "User login Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70a8e5ed-2280-4aa0-b7d3-de6df439037b",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"///// Parsing the User login token from the response body",
+									"var access = body.token;",
+									"",
+									"pm.environment.set(\"KYGAuth\", access)",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Access Token Generated Successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"///Parsing data from the response bidy to Placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID) /// Plan ID",
+									"pm.environment.set('languageid',jsonData.user.LanguageID) ///Language ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID) /// Status ID",
+									"pm.environment.set('email',jsonData.user.email) /// User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID) /// User Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) /// User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) /// User Status",
+									"pm.environment.set('userid',jsonData.user.userid) /// User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) /// Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) /// Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) /// Language Code",
+									"pm.environment.set('userRoleID',jsonData.user.roles[0].RoleID) /// User Role ID",
+									"pm.environment.set('userRoleName',jsonData.user.roles[0].Name) /// User Role Name",
+									"pm.environment.set('roleLandingPage',jsonData.user.roles[0].LandingPage) /// Landing Page",
+									"pm.environment.set('roleLandingPageID',jsonData.user.roles[0].LandingPageID) /// Role Landing Page ID",
+									"pm.environment.set('userLandingPageID',jsonData.user.landingPage.LandingPageID) /// User Landing Page ID",
+									"pm.environment.set('userLandingPageName',jsonData.user.landingPage.Name) /// User Landing Page Name",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"pm.test(\"Company Admin Status\", function(){",
+									"   pm.expect(jsonData.user.CompanyAdmin).to.be.oneOf([true,false]); ",
+									"})",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.LanguageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.LanguageID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									"",
+									"pm.test(\"User Role ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.eql(pm.environment.get('userRoleID'));",
+									"});",
+									"",
+									"pm.test(\"User Role Name\", function(){",
+									"    pm.expect(jsonData.user.roles[0].Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].Name).to.eql(pm.environment.get('userRoleName'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.eql(pm.environment.get('roleLandingPage'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.eql(pm.environment.get('roleLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.eql(pm.environment.get('userLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page Name\", function(){",
+									"    pm.expect(jsonData.user.landingPage.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.landingPage.Name).to.eql(pm.environment.get('userLandingPageName'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "68dd4078-06b2-4eaa-812a-3f4a0cb7436a",
+								"exec": [
+									"/*Admin Cred",
+									"",
+									"var admin = \"michael.qa@code-care.pro\";",
+									"",
+									"pm.environment.set(\"adminEmail\",admin);",
+									"",
+									"var adminpass = \"NPa55w@rd\";",
+									"",
+									"pm.environment.set(\"adminPass\",adminpass);*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "cd1b04c7-2c5d-4319-8ce9-db64a0d0bb2d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/login"
+					},
+					"response": [
+						{
+							"id": "98cd6044-04aa-40a7-ac0e-7746a652f6f6",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": "{{baseUrl}}/authentication/login"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get user details from token Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2efd3f84-d6b0-4e02-9f98-1a217a56e29e",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.environment.set('planid',jsonData.user.PlanID)",
+									"pm.environment.set('languageid',jsonData.user.LanguageID)",
+									"pm.environment.set('statusid',jsonData.user.StatusID)",
+									"pm.environment.set('email',jsonData.user.email)",
+									"pm.environment.set('firstName',jsonData.user.firstName)",
+									"pm.environment.set('lastName',jsonData.user.lastName)",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID)",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name)",
+									"pm.environment.set('userstatus',jsonData.user.status)",
+									"pm.environment.set('userid',jsonData.user.userid)",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID)",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName)",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode)",
+									"pm.environment.set('userRoleID',jsonData.user.roles[0].RoleID)",
+									"pm.environment.set('userRoleName',jsonData.user.roles[0].Name)",
+									"pm.environment.set('roleLandingPage',jsonData.user.roles[0].LandingPage)",
+									"pm.environment.set('roleLandingPageID',jsonData.user.roles[0].LandingPageID)",
+									"pm.environment.set('userLandingPageID',jsonData.user.landingPage.LandingPageID)",
+									"pm.environment.set('userLandingPageName',jsonData.user.landingPage.Name)",
+									"",
+									"",
+									"",
+									"pm.test(\"Company Admin Status\", function(){",
+									"   pm.expect(jsonData.user.CompanyAdmin).to.eql(false); ",
+									"})",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.LanguageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.LanguageID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									"",
+									"pm.test(\"User Role ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.eql(pm.environment.get('userRoleID'));",
+									"});",
+									"",
+									"pm.test(\"User Role Name\", function(){",
+									"    pm.expect(jsonData.user.roles[0].Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].Name).to.eql(pm.environment.get('userRoleName'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.eql(pm.environment.get('roleLandingPage'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.eql(pm.environment.get('roleLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.eql(pm.environment.get('userLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page Name\", function(){",
+									"    pm.expect(jsonData.user.landingPage.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.landingPage.Name).to.eql(pm.environment.get('userLandingPageName'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "15a1255f-93b7-42f3-ac4b-d30725b241ce",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/authentication/user"
+					},
+					"response": [
+						{
+							"id": "cdf59f9f-10b6-4f58-a1d5-43d64823ba95",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{baseUrl}}/authentication/user"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Products Controller product Wizard Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "232ce11e-6dfa-4621-9bf0-5613f35a65c7",
+								"exec": [
+									"var body = JSON.parse(responseBody);",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set('NEWKYGID',jsonData.product.KYGID)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "cf4a5b66-65de-40c6-9a0b-1a610a5e60a7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"declarationTypes\": [\n    \"1\",\n    \"1\"\n  ],\n  \"attestationTypes\": [\n    \"1\",\n    \"2\",\n    \"3\",\n    \"4\",\n    \"5\",\n    \"6\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/products/product-wizard"
+					},
+					"response": [
+						{
+							"id": "d7370c28-9ff2-4669-9ed5-a625eb07f55a",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"declarationTypes\": [\n    \"ipsum\",\n    \"commodo aliqua do pariatur\"\n  ],\n  \"attestationTypes\": [\n    \"anim ullamco officia quis labore\",\n    \"consect\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/products/product-wizard"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{}"
+						}
+					]
+				},
+				{
+					"name": "Products Controller get Products (User) Copy",
+					"_postman_id": "203a63e4-d2bb-4cfe-8c06-6378ae157030",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products?page=1&limit=100&query=&type=User&orderBy=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "100"
+								},
+								{
+									"key": "query",
+									"value": ""
+								},
+								{
+									"key": "type",
+									"value": "User"
+								},
+								{
+									"key": "orderBy",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "a5e71197-b8f1-44f2-955e-de7565e5431d",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/products?page=-5754955.121394232&limit=-5754955.121394232&query=mollit&type=Role&orderBy=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "-5754955.121394232"
+										},
+										{
+											"key": "limit",
+											"value": "-5754955.121394232"
+										},
+										{
+											"key": "query",
+											"value": "mollit"
+										},
+										{
+											"key": "type",
+											"value": "Role"
+										},
+										{
+											"key": "orderBy",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"result\": [\n    {\n      \"KYGID\": -74888312.9009895,\n      \"CreationDate\": \"1978-08-09T15:21:56.354Z\",\n      \"AttestDocCSV\": \"elit sed\",\n      \"DataOwnerID\": -29160529.622670904,\n      \"L1TrxHash\": \"proident elit et\",\n      \"L1BlockHash\": \"eiusmod Excepteur incididunt\",\n      \"L1BlockNumber\": \"sint fugiat\",\n      \"L1ContractAddress\": \"deserun\",\n      \"ViewingProductPage\": false,\n      \"ViewingFindingsPage\": true,\n      \"PreviosKYGID\": 92493168.14497855\n    },\n    {\n      \"KYGID\": -38908429.9984098,\n      \"CreationDate\": \"1983-05-03T00:55:13.111Z\",\n      \"AttestDocCSV\": \"deserunt\",\n      \"DataOwnerID\": -717112.7590607852,\n      \"L1TrxHash\": \"enim adipisicing ullamco\",\n      \"L1BlockHash\": \"in mollit\",\n      \"L1BlockNumber\": \"mollit nulla quis dolore\",\n      \"L1ContractAddress\": \"deserunt Duis\",\n      \"ViewingProductPage\": false,\n      \"ViewingFindingsPage\": false,\n      \"PreviosKYGID\": -27429761.936755836\n    }\n  ],\n  \"total\": 10042428.835016087\n}"
+						}
+					]
+				},
+				{
+					"name": "Products Controller get Att Types Copy",
+					"_postman_id": "995df425-a6d8-4ed3-8a46-ddf3cd301555",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": "{{baseUrl}}/products/all-attestation-types"
+					},
+					"response": [
+						{
+							"id": "60f937a0-6ce6-4acf-adb1-2f8ce0043206",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{baseUrl}}/products/all-attestation-types"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "[\n  {\n    \"DeclarationTypesID\": 68077676.75562823,\n    \"Name\": \"dolor quis velit minim\",\n    \"FullName\": \"fugiat\",\n    \"filename\": \"anim qui in dolor\",\n    \"TemplateURL\": \"eu fugiat nulla pariatur\",\n    \"IsESignatureNedeed\": false,\n    \"FileLinkMetaAttributeID\": -65559560.20207518,\n    \"AttestationFileLinkMetaAttributeID\": -62921718.7971852\n  },\n  {\n    \"DeclarationTypesID\": 86651078.85693172,\n    \"Name\": \"eiusmod dolor sunt aliqua\",\n    \"FullName\": \"consequat ea irure nulla\",\n    \"filename\": \"Excepteur \",\n    \"TemplateURL\": \"ad Excepteur nulla amet\",\n    \"IsESignatureNedeed\": true,\n    \"FileLinkMetaAttributeID\": -48462378.80998352,\n    \"AttestationFileLinkMetaAttributeID\": -57586523.37386163\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Creates new attestation and attestation attributes Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f6b9903-fdf9-481d-a045-ce4a774b07b2",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									"var body = JSON.parse(responseBody);",
+									"",
+									"var docid = body[0].DocumentID;",
+									"",
+									"pm.environment.set(\"DOCID\", docid)",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Document ID Successfull\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].DocumentID).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"DocumentID\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "65a45791-6255-41b9-94e5-1f41f4e91644",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"AttestationTypeID\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/attestations/:KYGID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestations",
+								":KYGID"
+							],
+							"variable": [
+								{
+									"id": "9d23064a-2a91-4f18-a793-b71f26b9474f",
+									"key": "KYGID",
+									"value": "{{NEWKYGID}}",
+									"description": "(Required) ",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "0caccb65-27fa-4f35-b656-7217fc3b76ff",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"AttestationTypeID\": -11610867.106028259\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/attestations/:KYGID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestations",
+										":KYGID"
+									],
+									"variable": [
+										{
+											"key": "KYGID",
+											"value": "-5754955.121394232",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"DocumentID\": -24851178.010619357,\n  \"LabelName\": \"reprehenderit labore nulla elit ea\",\n  \"AttributeValue\": {},\n  \"ElementName\": \"cillum occaecat labore\",\n  \"DataType\": \"cupidatat nisi Ut cillum\",\n  \"AttestationAttributeID\": -39738904.74663424,\n  \"DDLBStart\": 75920471.86865893,\n  \"DDLBID\": -25295870.967746124,\n  \"Required\": {},\n  \"UIReadOnly\": false,\n  \"DescriptionShort\": \"labore mollit non Lorem\",\n  \"AttributeOrder\": -16072382.246257171\n}"
+						}
+					]
+				},
+				{
+					"name": "Return list of attestations belongs to specific product Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ec2c829c-ddb1-4312-adb9-24e785135f63",
+								"exec": [
+									"//var kid = {{NEWKYGID}};",
+									"",
+									"//pm.environment.set(\"KYID\",kid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6dfe46ac-fd85-499f-bbdc-e021e4352713",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "178e0473-0d95-4856-91fd-579e4aca899c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/attestations/:KYGID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestations",
+								":KYGID"
+							],
+							"variable": [
+								{
+									"id": "82d775d6-0495-43f4-87cf-ddaf3ab2ec14",
+									"key": "KYGID",
+									"value": "{{NEWKYGID}}",
+									"description": "(Required) ",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "2c8b621c-dc78-46fe-89f5-0e70d47c92cd",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/attestations/:KYGID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestations",
+										":KYGID"
+									],
+									"variable": [
+										{
+											"key": "KYGID",
+											"value": "-5754955.121394232",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"DocumentID\": -24851178.010619357,\n  \"LabelName\": \"reprehenderit labore nulla elit ea\",\n  \"AttributeValue\": {},\n  \"ElementName\": \"cillum occaecat labore\",\n  \"DataType\": \"cupidatat nisi Ut cillum\",\n  \"AttestationAttributeID\": -39738904.74663424,\n  \"DDLBStart\": 75920471.86865893,\n  \"DDLBID\": -25295870.967746124,\n  \"Required\": {},\n  \"UIReadOnly\": false,\n  \"DescriptionShort\": \"labore mollit non Lorem\",\n  \"AttributeOrder\": -16072382.246257171\n}"
+						}
+					]
+				},
+				{
+					"name": "Return document attributes Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "129211fb-4f1b-4824-9ffa-6288775d32c5",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "0626f06f-9154-4d34-b272-9d4942505eb6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/attestations/attributes/:DocumentID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestations",
+								"attributes",
+								":DocumentID"
+							],
+							"variable": [
+								{
+									"id": "41d3621f-4eb2-46b7-bc62-aa9327de46cd",
+									"key": "DocumentID",
+									"value": "{{DOCID}}",
+									"description": "(Required) ",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "31a1acc9-5b83-485f-a4e2-c26e3d70f206",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/attestations/attributes/:DocumentID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestations",
+										"attributes",
+										":DocumentID"
+									],
+									"variable": [
+										{
+											"key": "DocumentID",
+											"value": "-5754955.121394232",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"doesSupportAttestorEvaulation\": false,\n  \"doesSupportOracleEvaulation\": true,\n  \"documentAttributes\": [\n    {\n      \"AttestationAttributeID\": 93379260.95700285,\n      \"DocumentID\": -1580832.3579271585,\n      \"AttributeValue\": {},\n      \"AttributeOrder\": 59797924.829414606,\n      \"DDLBID\": 8409577.494549885,\n      \"DDLBStart\": -58154045.53374997,\n      \"UIReadOnly\": -33791386.899956025,\n      \"Required\": false,\n      \"LabelName\": \"veniam labore magna nostrud\",\n      \"ElementName\": \"ea labore proident\",\n      \"DescriptionShort\": \"esse laboris\",\n      \"DataType\": \"d\",\n      \"FormQuestionID\": 86758621.18196455\n    },\n    {\n      \"AttestationAttributeID\": -34211373.43120058,\n      \"DocumentID\": -51311230.544781685,\n      \"AttributeValue\": {},\n      \"AttributeOrder\": -5442611.168536663,\n      \"DDLBID\": -23512100.57898681,\n      \"DDLBStart\": -60747576.69287636,\n      \"UIReadOnly\": -77527619.78106774,\n      \"Required\": false,\n      \"LabelName\": \"Lorem fugiat aute proident\",\n      \"ElementName\": \"sit eu sint\",\n      \"DescriptionShort\": \"commodo nulla dolor\",\n      \"DataType\": \"pariatur cupidatat commodo non\",\n      \"FormQuestionID\": -70456908.19675912\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Attestation Process Controller chosen Flow Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94017293-2cc0-4f98-8694-17f079b03751",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "e09e23e6-6202-4bc4-88be-c3471f3f1e85",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/attestation-process/chosen-flow/:DocID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestation-process",
+								"chosen-flow",
+								":DocID"
+							],
+							"variable": [
+								{
+									"id": "f5d50233-a175-4275-8729-929d9289226c",
+									"key": "DocID",
+									"value": "{{DOCID}}",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "c56992a8-e9c5-41d9-9a98-a50d9fa17fbb",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/attestation-process/chosen-flow/:DocID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestation-process",
+										"chosen-flow",
+										":DocID"
+									],
+									"variable": [
+										{
+											"key": "DocID"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				}
+			],
+			"_postman_id": "0a02d941-5da2-4280-95f5-3bd36b344c11",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{KYGAuth}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ebe3ae6b-e0b4-4e1d-9d84-1a45f0da6a27",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "43f145d4-cd45-42af-a7e7-9ee2d8c2e1db",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
