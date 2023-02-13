@@ -1,0 +1,4391 @@
+{
+	"info": {
+		"_postman_id": "f6ba9fe4-75ee-4b78-9dd0-01fb81df4ec6",
+		"name": "KYGProcessFlow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "NProcess Flow",
+			"item": [
+				{
+					"name": "User registration User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2b462615-01d1-48fd-a55b-175decb95ac7",
+								"exec": [
+									"var min= 100; ",
+									"    var max= 999;  ",
+									"    var randomId =Math.floor(Math.random() * (max + min));",
+									"",
+									"var walk = \"michael\"+randomId+\"@mail.com\";",
+									"var tFN = \"Michael\";",
+									"var tLN = \"test\";",
+									"",
+									"pm.environment.set(\"testEmail\", walk);",
+									"pm.environment.set(\"testFirstName\", tFN);",
+									"pm.environment.set(\"testLastName\", tLN);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "080f53dd-e2d4-4b9f-bef0-99d5cc0f897f",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"///Parsing the data from the response body",
+									"pm.environment.set('email',jsonData.user.email) ///user email",
+									"pm.environment.set('userid',jsonData.user.userid) //// User ID",
+									"pm.environment.set('languageid',jsonData.user.Language.LanguagesID) /// User Language ID",
+									"pm.environment.set('languagename',jsonData.user.Language.LanguageName) /// User Language Name",
+									"pm.environment.set('languagecode',jsonData.user.Language.LanguageCode) /// User Language Code",
+									"pm.environment.set('planid',jsonData.user.PlanID) /// Plan ID",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"",
+									"/////Parsing the Registration Token",
+									"",
+									"var regkey = body.token;",
+									"",
+									"",
+									"pm.environment.set(\"KYGREGAuth\", regkey)",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Access Token Generated Successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"",
+									"/////Parsing the User ID",
+									"",
+									"var userid = body.user.userid;",
+									"",
+									"",
+									"pm.environment.set(\"UserID\", userid)",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Get User ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user.userid).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"userid\");",
+									"});",
+									"",
+									"",
+									"/// Running Assertions on the Response Body",
+									"pm.test(\"Status Code is 201\", function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"Password is not created\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.eql(1);",
+									"});",
+									"",
+									"pm.test(\"user id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\" Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('languagename'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\" Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('languagecode'));",
+									"    ",
+									"});",
+									"",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "8101d38e-8f71-41f6-b9d5-f4c8286eb864",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"firstName\": \"{{testFirstName}}\",\n  \"lastName\": \"{{testLastName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/register"
+					},
+					"response": [
+						{
+							"id": "5df82612-25d0-4ef0-85ab-c02eeffb557f",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/authentication/register"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Email confirmation (New User)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8a26ff4d-6cc7-4ad5-b3a3-c789d7754059",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "78e4de48-13ae-46f8-a785-f3e24538176b",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"//// Parsing the responsebody to placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID)/// Plan ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID) ///User Status ID",
+									"pm.environment.set('email',jsonData.user.email) ///User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID) /// Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) /// User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) /// User Status",
+									"pm.environment.set('userid',jsonData.user.userid) /// User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) /// Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) /// Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) /// Language Code",
+									"",
+									"var confirmkey = body.token;",
+									"",
+									"/////Running assertions on the responsebody",
+									"pm.environment.set(\"KYGConfirmEmailAuth\", confirmkey)",
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Confirm Email Access Token Generated Successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"pm.test(\"Status Code is 201\", function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Company Admin Status\", function(){",
+									"    pm.expect(jsonData.user.CompanyAdmin).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "793e69d9-3a33-4ce3-a811-f9ad1d1ceead",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{KYGREGAuth}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/confirm-email"
+					},
+					"response": [
+						{
+							"id": "cbdcfc5d-542a-4789-a901-0612e850c402",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/authentication/confirm-email"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "For adding password (New User)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7ac7e42c-bf96-44a9-b539-7b824b4fbd2a",
+								"exec": [
+									"var pass = \"Pa55w@rd\";",
+									"",
+									"pm.environment.set(\"password\",pass);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "37179a86-69fd-4f87-aed0-826d6450955b",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"///Parsing data from responsebody to Placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID) ///Plan ID",
+									"pm.environment.set('languageid',jsonData.user.LanguageID) ///Language ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID)/// Status ID",
+									"pm.environment.set('email',jsonData.user.email) /// User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID) ///Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) ///User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) /// User Status",
+									"pm.environment.set('userid',jsonData.user.userid) ///User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) ///Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) ///Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) ///Language Code",
+									"pm.environment.set('userRoleID',jsonData.user.roles[0].RoleID) ///User Role ID",
+									"pm.environment.set('userRoleName',jsonData.user.roles[0].Name) /// User Role Name",
+									"pm.environment.set('roleLandingPage',jsonData.user.roles[0].LandingPage) /// User Landing Page",
+									"pm.environment.set('roleLandingPageID',jsonData.user.roles[0].LandingPageID) /// Role Landing Page ID",
+									"pm.environment.set('userLandingPageID',jsonData.user.landingPage.LandingPageID) /// User Landing Page ID",
+									"pm.environment.set('userLandingPageName',jsonData.user.landingPage.Name) ///User Landing Page Name",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"/// Parsing Assertions from the Response Body",
+									"pm.test(\"Status Code is 201\", function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Company Admin Status\", function(){",
+									"   pm.expect(jsonData.user.CompanyAdmin).to.eql(false); ",
+									"})",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.LanguageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.LanguageID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									"",
+									"pm.test(\"User Role ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.eql(pm.environment.get('userRoleID'));",
+									"});",
+									"",
+									"pm.test(\"User Role Name\", function(){",
+									"    pm.expect(jsonData.user.roles[0].Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].Name).to.eql(pm.environment.get('userRoleName'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.eql(pm.environment.get('roleLandingPage'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.eql(pm.environment.get('roleLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.eql(pm.environment.get('userLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page Name\", function(){",
+									"    pm.expect(jsonData.user.landingPage.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.landingPage.Name).to.eql(pm.environment.get('userLandingPageName'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "baad6e9b-b4e6-4b48-9578-9fa41ade27d7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGConfirmEmailAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/add-password"
+					},
+					"response": [
+						{
+							"id": "171279dd-ce0e-440e-a0ef-1d446a094a26",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/authentication/add-password"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "User login (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70a8e5ed-2280-4aa0-b7d3-de6df439037b",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"///// Parsing the User login token from the response body",
+									"var access = body.token;",
+									"",
+									"pm.environment.set(\"KYGAuth\", access)",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"New User Access Token Generated Successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"///Parsing data from the response bidy to Placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID) /// Plan ID",
+									"pm.environment.set('languageid',jsonData.user.LanguageID) ///Language ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID) /// Status ID",
+									"pm.environment.set('email',jsonData.user.email) /// User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID) /// User Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) /// User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) /// User Status",
+									"pm.environment.set('userid',jsonData.user.userid) /// User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) /// Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) /// Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) /// Language Code",
+									"pm.environment.set('userRoleID',jsonData.user.roles[0].RoleID) /// User Role ID",
+									"pm.environment.set('userRoleName',jsonData.user.roles[0].Name) /// User Role Name",
+									"pm.environment.set('roleLandingPage',jsonData.user.roles[0].LandingPage) /// Landing Page",
+									"pm.environment.set('roleLandingPageID',jsonData.user.roles[0].LandingPageID) /// Role Landing Page ID",
+									"pm.environment.set('userLandingPageID',jsonData.user.landingPage.LandingPageID) /// User Landing Page ID",
+									"pm.environment.set('userLandingPageName',jsonData.user.landingPage.Name) /// User Landing Page Name",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"pm.test(\"Company Admin Status\", function(){",
+									"   pm.expect(jsonData.user.CompanyAdmin).to.be.oneOf([true,false]); ",
+									"})",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.LanguageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.LanguageID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									"",
+									"pm.test(\"User Role ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.eql(pm.environment.get('userRoleID'));",
+									"});",
+									"",
+									"pm.test(\"User Role Name\", function(){",
+									"    pm.expect(jsonData.user.roles[0].Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].Name).to.eql(pm.environment.get('userRoleName'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.eql(pm.environment.get('roleLandingPage'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.eql(pm.environment.get('roleLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.eql(pm.environment.get('userLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page Name\", function(){",
+									"    pm.expect(jsonData.user.landingPage.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.landingPage.Name).to.eql(pm.environment.get('userLandingPageName'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "68dd4078-06b2-4eaa-812a-3f4a0cb7436a",
+								"exec": [
+									"/*Admin Cred",
+									"",
+									"var admin = \"michael.qa@code-care.pro\";",
+									"",
+									"pm.environment.set(\"adminEmail\",admin);",
+									"",
+									"var adminpass = \"NPa55w@rd\";",
+									"",
+									"pm.environment.set(\"adminPass\",adminpass);*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "cd1b04c7-2c5d-4319-8ce9-db64a0d0bb2d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/login"
+					},
+					"response": [
+						{
+							"id": "98cd6044-04aa-40a7-ac0e-7746a652f6f6",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": "{{baseUrl}}/authentication/login"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "User login (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70a8e5ed-2280-4aa0-b7d3-de6df439037b",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"///// Parsing the User login token from the response body",
+									"var access = body.token;",
+									"",
+									"pm.environment.set(\"KYGAdminAuth\", access)",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Admin Access Token Generated Successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"///Parsing data from the response bidy to Placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID) /// Plan ID",
+									"pm.environment.set('languageid',jsonData.user.LanguageID) ///Language ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID) /// Status ID",
+									"pm.environment.set('email',jsonData.user.email) /// User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) /// User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) /// User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID) /// User Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) /// User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) /// User Status",
+									"pm.environment.set('userid',jsonData.user.userid) /// User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) /// Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) /// Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) /// Language Code",
+									"pm.environment.set('userRoleID',jsonData.user.roles[0].RoleID) /// User Role ID",
+									"pm.environment.set('userRoleName',jsonData.user.roles[0].Name) /// User Role Name",
+									"pm.environment.set('roleLandingPage',jsonData.user.roles[0].LandingPage) /// Landing Page",
+									"pm.environment.set('roleLandingPageID',jsonData.user.roles[0].LandingPageID) /// Role Landing Page ID",
+									"pm.environment.set('userLandingPageID',jsonData.user.landingPage.LandingPageID) /// User Landing Page ID",
+									"pm.environment.set('userLandingPageName',jsonData.user.landingPage.Name) /// User Landing Page Name",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"pm.test(\"Company Admin Status\", function(){",
+									"   pm.expect(jsonData.user.CompanyAdmin).to.eql(true); ",
+									"})",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.LanguageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.LanguageID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									"",
+									"pm.test(\"User Role ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.eql(pm.environment.get('userRoleID'));",
+									"});",
+									"",
+									"pm.test(\"User Role Name\", function(){",
+									"    pm.expect(jsonData.user.roles[0].Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].Name).to.eql(pm.environment.get('userRoleName'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.eql(pm.environment.get('roleLandingPage'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.eql(pm.environment.get('roleLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.eql(pm.environment.get('userLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page Name\", function(){",
+									"    pm.expect(jsonData.user.landingPage.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.landingPage.Name).to.eql(pm.environment.get('userLandingPageName'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "68dd4078-06b2-4eaa-812a-3f4a0cb7436a",
+								"exec": [
+									"//Admin Cred",
+									"",
+									"var admin = \"michael.qa@code-care.pro\";",
+									"",
+									"pm.environment.set(\"adminEmail\",admin);",
+									"",
+									"var adminpass = \"123456789\";",
+									"",
+									"pm.environment.set(\"adminPass\",adminpass);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "f84ee383-e3fd-4302-abf7-026c022aa3d3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPass}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/authentication/login"
+					},
+					"response": [
+						{
+							"id": "2fd0066e-33f0-4d22-84d9-a8cfeb313bbe",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": "{{baseUrl}}/authentication/login"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Users Controller get Company Fields (Admin)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9e8b52eb-28f5-407b-8972-6052f6068376",
+								"exec": [
+									"var compid = 12;",
+									"",
+									"pm.environment.set(\"companyID\",compid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b03e0161-827f-4657-aa23-4edc778cc7f8",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"///Parsing data from the response bidy to Placeholders",
+									"pm.environment.set('compID',jsonData.CompanyID) /// Company ID",
+									"pm.environment.set('compName',jsonData.Name) /// Company Name",
+									"pm.environment.set('compAddress1',jsonData.Address1) /// Company Address 1",
+									"pm.environment.set('compAddress2',jsonData.Address2) /// Company Address 2",
+									"pm.environment.set('compCity',jsonData.City) /// Company City",
+									"pm.environment.set('compStateAbbr',jsonData.StateAbbr) /// Company State Abbreviations",
+									"pm.environment.set('compPostalCode',jsonData.PostalCode) /// Company Postal Code",
+									"pm.environment.set('compDomainsCSV',jsonData.DomainsCSV) /// Company Domains CSV",
+									"pm.environment.set('compWalletAddress',jsonData.WalletAddress) /// Company Wallet Address",
+									"pm.environment.set('compStatus',jsonData.Status) /// Company Status",
+									"pm.environment.set('compSGX',jsonData.SGX) /// Company SGX",
+									"pm.environment.set('compMarketPlaceTypeID',jsonData.MarketPlaceTypeID) /// Company MarketPlace Type ID",
+									"pm.environment.set('compusersEditPermission',jsonData.usersEditPermission) /// Company users Edit Permission",
+									"pm.environment.set('compuseBlockchain',jsonData.useBlockchain) /// Company use Blockchain",
+									"pm.environment.set('compuseRDO',jsonData.useRDO) /// Company use RDO",
+									"pm.environment.set('compLogoUrl',jsonData.CompanyLogoUrl) /// Company Company Logo Url",
+									"pm.environment.set('compMPTypeID',jsonData.marketplaceType.MarketPlaceTypeID) /// Company Marketplace Type ID",
+									"pm.environment.set('compMPTypeName',jsonData.marketplaceType.Name) /// Company Marketplace Type Name",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Company ID\", function(){",
+									"   pm.expect(jsonData.CompanyID).to.eql(pm.environment.get('compID')); ",
+									"})",
+									"",
+									"pm.test(\"Company Name\", function(){",
+									"   pm.expect(jsonData.Name).to.eql(pm.environment.get('compName')); ",
+									"})",
+									"",
+									"pm.test(\"Company Address 1\", function(){",
+									"   pm.expect(jsonData.Address1).to.eql(pm.environment.get('compAddress1')); ",
+									"})",
+									"",
+									"pm.test(\"Company Address 2\", function(){",
+									"   pm.expect(jsonData.Address2).to.eql(pm.environment.get('compAddress2')); ",
+									"})",
+									"",
+									"pm.test(\"Company City\", function(){",
+									"   pm.expect(jsonData.City).to.eql(pm.environment.get('compCity')); ",
+									"})",
+									"",
+									"pm.test(\"Company State Abbreviation\", function(){",
+									"   pm.expect(jsonData.StateAbbr).to.eql(pm.environment.get('compStateAbbr')); ",
+									"})",
+									"",
+									"pm.test(\"Company Postal Code\", function(){",
+									"   pm.expect(jsonData.PostalCode).to.eql(pm.environment.get('compPostalCode')); ",
+									"})",
+									"",
+									"pm.test(\"Company Domain CSV\", function(){",
+									"   pm.expect(jsonData.DomainsCSV).to.eql(pm.environment.get('compDomainsCSV')); ",
+									"})",
+									"",
+									"pm.test(\"Company Wallet Address\", function(){",
+									"   pm.expect(jsonData.WalletAddress).to.eql(pm.environment.get('compWalletAddress')); ",
+									"})",
+									"",
+									"pm.test(\"Company Status\", function(){",
+									"   pm.expect(jsonData.Status).to.eql(pm.environment.get('compStatus')); ",
+									"})",
+									"",
+									"pm.test(\"Company USML Required\", function(){",
+									"   pm.expect(jsonData.USMLRequired).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company CCL Required\", function(){",
+									"   pm.expect(jsonData.CCLRequired).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company SQX Status\", function(){",
+									"   pm.expect(jsonData.IsSQXOn).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company Marketplace Type ID\", function(){",
+									"   pm.expect(jsonData.MarketPlaceTypeID).to.eql(pm.environment.get('compMarketPlaceTypeID')); ",
+									"})",
+									"",
+									"pm.test(\"Company Users Edit Permission\", function(){",
+									"   pm.expect(jsonData.usersEditPermission).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company Blockchain Status\", function(){",
+									"   pm.expect(jsonData.useBlockchain).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company RDO Status\", function(){",
+									"   pm.expect(jsonData.useRDO).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company Logo URL\", function(){",
+									"   pm.expect(jsonData.CompanyLogoUrl).to.eql(pm.environment.get('compLogoUrl')); ",
+									"})",
+									"",
+									"pm.test(\"Company Marketplace Type ID\", function(){",
+									"   pm.expect(jsonData.marketplaceType.MarketPlaceTypeID).to.eql(pm.environment.get('compMPTypeID')); ",
+									"})",
+									"",
+									"pm.test(\"Company Marketplace Type Name\", function(){",
+									"   pm.expect(jsonData.marketplaceType.Name).to.eql(pm.environment.get('compMPTypeName')); ",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "21556a96-124e-4d21-a734-d376d48d2b43",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAdminAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/company?CompanyID={{companyID}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"company"
+							],
+							"query": [
+								{
+									"key": "CompanyID",
+									"value": "{{companyID}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "2e4d20fd-0417-41d2-8dee-9c385faba394",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/company?CompanyID=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"company"
+									],
+									"query": [
+										{
+											"key": "CompanyID",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Users Controller invite To The Company (Invite User))",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e4ea377-53ab-4d25-bfff-399345d13e8d",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"response has status true\", function(){",
+									"    pm.response.to.have.jsonBody(true)",
+									"})",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "33436d5c-d21f-4df0-983c-c93dd2a7548d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAdminAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userid\": {{UserID}},\n  \"action\": \"Invite\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/manage-company-members?CompanyID={{companyID}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"manage-company-members"
+							],
+							"query": [
+								{
+									"key": "CompanyID",
+									"value": "{{companyID}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "edb0b2ca-23a1-4033-863f-a414cb83fa95",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/manage-company-members?CompanyID=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"manage-company-members"
+									],
+									"query": [
+										{
+											"key": "CompanyID",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Users Controller invite To The Company (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7b41662-3d0e-46a0-aad3-2da63fe08d9f",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"response has status true\", function(){",
+									"    pm.response.to.have.jsonBody(true)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "0d396b64-01c5-437c-9323-75812670f575",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAdminAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userid\": {{UserID}},\n  \"action\": \"Admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/manage-company-members?CompanyID={{companyID}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"manage-company-members"
+							],
+							"query": [
+								{
+									"key": "CompanyID",
+									"value": "{{companyID}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "0a9dd133-7f81-4705-b03a-64f37e1916d5",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/manage-company-members?CompanyID=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"manage-company-members"
+									],
+									"query": [
+										{
+											"key": "CompanyID",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Manage company member status (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d205ae3-efcd-4c23-8d6e-33b84eec91dd",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"///Parsing data from the response body to Placeholders",
+									"pm.environment.set('statusID',jsonData.StatusID) /// Status ID",
+									"pm.environment.set('name',jsonData.Name) /// Name",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Status ID\", function(){",
+									"   pm.expect(jsonData.StatusID).to.eql(pm.environment.get('statusID')); ",
+									"})",
+									"",
+									"pm.test(\"Name\", function(){",
+									"   pm.expect(jsonData.Name).to.eql(pm.environment.get('name')); ",
+									"})",
+									"",
+									"pm.test(\"Department\", function(){",
+									"   pm.expect(jsonData.Department).to.eql(true);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "9102d62b-3dc5-4170-941b-20fa624f8fdb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAdminAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userid\": {{UserID}},\n  \"statusDdlbId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/company/set-member-status?CompanyID={{companyID}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"company",
+								"set-member-status"
+							],
+							"query": [
+								{
+									"key": "CompanyID",
+									"value": "{{companyID}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "f4b659cb-f188-42fa-9013-d228e8ef2375",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userid\": 42526786.31770924,\n  \"statusDdlbId\": -17901225.30744958\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/company/set-member-status?CompanyID=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"company",
+										"set-member-status"
+									],
+									"query": [
+										{
+											"key": "CompanyID",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Users Controller get Members (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "85b48bc7-f610-4a90-b739-2e35ecaa759d",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.environment.set('Totalno',jsonData.total) ///  Total number of Members",
+									"///Using the For Loop to assert through the details of every member in the Companyy////",
+									"",
+									"for (let i = 0; i < pm.environment.get('Totalno')-1; i++) {",
+									"",
+									"    ///Parsing data from the response body to Placeholders",
+									"pm.environment.set('memberID',jsonData.result[i].userid) ///  Company Member User ID",
+									"pm.environment.set('memberEmail',jsonData.result[i].email) ///  Company Member Email",
+									"pm.environment.set('memberFirstName',jsonData.result[i].firstName) ///  Company Member First Name",
+									"pm.environment.set('memberLastName',jsonData.result[i].lastName) ///  Company Member Last Name",
+									"pm.environment.set('memberImage',jsonData.result[i].imageUrl) ///  Company Member Image URL",
+									"pm.environment.set('userStatusID',jsonData.result[i].userStatus.StatusID) ///  Company Member User Status ID",
+									"pm.environment.set('userStatusName',jsonData.result[i].userStatus.Name) ///  Company Member User Name Status",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Company Member ID\", function(){",
+									"   pm.expect(jsonData.result[i].userid).to.eql(pm.environment.get('memberID')); ",
+									"})",
+									"",
+									"pm.test(\"Company Member Email\", function(){",
+									"   pm.expect(jsonData.result[i].email).to.eql(pm.environment.get('memberEmail')); ",
+									"})",
+									"",
+									"pm.test(\"Company Member First Name\", function(){",
+									"   pm.expect(jsonData.result[i].firstName).to.eql(pm.environment.get('memberFirstName')); ",
+									"})",
+									"",
+									"pm.test(\"Company Member Last Name\", function(){",
+									"   pm.expect(jsonData.result[i].lastName).to.eql(pm.environment.get('memberLastName')); ",
+									"})",
+									"",
+									"pm.test(\"Company Member Image URL\", function(){",
+									"   pm.expect(jsonData.result[i].imageUrl).to.eql(pm.environment.get('memberImage')); ",
+									"})",
+									"",
+									"pm.test(\"Company Member Status\", function(){",
+									"   pm.expect(jsonData.result[i].isMember).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company Member Admin Status\", function(){",
+									"   pm.expect(jsonData.result[i].isCompanyAdmin).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company Member Expert Status\", function(){",
+									"   pm.expect(jsonData.result[i].isExpert).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company Member Supervisor Status\", function(){",
+									"   pm.expect(jsonData.result[i].isSupervisor).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"pm.test(\"Company Member Status ID\", function(){",
+									"   pm.expect(jsonData.result[i].userStatus.StatusID).to.eql(pm.environment.get('userStatusID')); ",
+									"})",
+									"",
+									"pm.test(\"Company Member Name\", function(){",
+									"   pm.expect(jsonData.result[i].userStatus.Name).to.eql(pm.environment.get('userStatusName')); ",
+									"})",
+									"",
+									"pm.test(\"Company Member Department Status\", function(){",
+									"   pm.expect(jsonData.result[i].userStatus.Department).to.be.oneOf([true,false]);",
+									"})",
+									"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "707743ad-dd6a-49bb-8200-c7ddca49a14d",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "f65e846b-0afb-4d10-aeff-9635b87a4e4a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAdminAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/search-company-members?page=1&limit=100&search=&CompanyID=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"search-company-members"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "(Required) "
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "(Required) "
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "(Required) "
+								},
+								{
+									"key": "CompanyID",
+									"value": "12",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "b410ec01-7052-4748-ba01-7a116b0c3cc2",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/search-company-members?page=-5754955.121394232&limit=-5754955.121394232&search=mollit&CompanyID=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"search-company-members"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "-5754955.121394232"
+										},
+										{
+											"key": "limit",
+											"value": "-5754955.121394232"
+										},
+										{
+											"key": "search",
+											"value": "mollit"
+										},
+										{
+											"key": "CompanyID",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Users Controller assign Department (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e45e18a-6625-44ab-a954-2d11878d9f81",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"response has status true\", function(){",
+									"    pm.response.to.have.jsonBody(true)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "1a9ea31f-6a3a-4e8a-918f-068a1fea69ac",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAdminAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userid\": {{UserID}},\n  \"CompanyDepartmentID\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/assign-department?CompanyID=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"assign-department"
+							],
+							"query": [
+								{
+									"key": "CompanyID",
+									"value": "12",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "5e6abe51-8ed9-43d3-aa2a-881f8bed8883",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userid\": 68888030.66829619,\n  \"CompanyDepartmentID\": -12595223.437515914\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/assign-department?CompanyID=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"assign-department"
+									],
+									"query": [
+										{
+											"key": "CompanyID",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get user details from token (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2efd3f84-d6b0-4e02-9f98-1a217a56e29e",
+								"exec": [
+									"var body = JSON.parse(responseBody)",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									" ///Parsing data from the response body to Placeholders",
+									"pm.environment.set('planid',jsonData.user.PlanID) // User Plan ID",
+									"pm.environment.set('languageid',jsonData.user.LanguageID) // Language ID",
+									"pm.environment.set('statusid',jsonData.user.StatusID) // Status ID",
+									"pm.environment.set('email',jsonData.user.email) // User Email",
+									"pm.environment.set('firstName',jsonData.user.firstName) //User First Name",
+									"pm.environment.set('lastName',jsonData.user.lastName) // User Last Name",
+									"pm.environment.set('userstatusid',jsonData.user.userStatus.StatusID)// User Status ID",
+									"pm.environment.set('userstatusname',jsonData.user.userStatus.Name) // User Status Name",
+									"pm.environment.set('userstatus',jsonData.user.status) // User Status",
+									"pm.environment.set('userid',jsonData.user.userid) // User ID",
+									"pm.environment.set('userLanguageID',jsonData.user.Language.LanguagesID) // Language ID",
+									"pm.environment.set('userLanguageName',jsonData.user.Language.LanguageName) // User Language Name",
+									"pm.environment.set('userLanguageCode',jsonData.user.Language.LanguageCode) // User Language Code",
+									"pm.environment.set('userRoleID',jsonData.user.roles[0].RoleID) // User Role ID",
+									"pm.environment.set('userRoleName',jsonData.user.roles[0].Name) // User Role Name",
+									"pm.environment.set('roleLandingPage',jsonData.user.roles[0].LandingPage) // User Landing Page",
+									"pm.environment.set('roleLandingPageID',jsonData.user.roles[0].LandingPageID) // User Role Landing Page ID",
+									"pm.environment.set('userLandingPageID',jsonData.user.landingPage.LandingPageID) // User Landing Page ID",
+									"pm.environment.set('userLandingPageName',jsonData.user.landingPage.Name) // User Landing Page Name",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Company Admin Status\", function(){",
+									"   pm.expect(jsonData.user.CompanyAdmin).to.eql(true); ",
+									"})",
+									"",
+									"pm.test(\"Completed Profile Status\", function(){",
+									"    pm.expect(jsonData.user.IsProfileCompleted).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\" Language id\", function(){",
+									"    pm.expect(jsonData.user.LanguageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.LanguageID).to.eql(pm.environment.get('languageid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Plan id\", function(){",
+									"    pm.expect(jsonData.user.PlanID).to.be.a('number');",
+									"    pm.expect(jsonData.user.PlanID).to.eql(pm.environment.get('planid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Status id\", function(){",
+									"    pm.expect(jsonData.user.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.StatusID).to.eql(pm.environment.get('statusid'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"To test the Email\", function(){",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));",
+									"});",
+									"",
+									"pm.test(\"To test the First Name\", function(){",
+									"    pm.expect(jsonData.user.firstName).to.be.a('string');",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"To test the Last Name\", function(){",
+									"    pm.expect(jsonData.user.lastName).to.be.a('string');",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Email Verification\", function(){",
+									"    pm.expect(jsonData.user.isEmailVerified).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Password Creation\", function(){",
+									"    pm.expect(jsonData.user.isPasswordCreated).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"pm.test(\"User Status id\", function(){",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.user.userStatus.StatusID).to.eql(pm.environment.get('userstatusid'));",
+									"});",
+									"",
+									"pm.test(\"User Status name\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.userStatus.Name).to.eql(pm.environment.get('userstatusname'));",
+									"});",
+									"",
+									"pm.test(\"User Status Department\", function(){",
+									"    pm.expect(jsonData.user.userStatus.Department).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.user.public).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"User Status\", function(){",
+									"    pm.expect(jsonData.user.status).to.be.a('number');",
+									"    pm.expect(jsonData.user.status).to.eql(pm.environment.get('userstatus'));",
+									"});",
+									"",
+									"pm.test(\"User id\", function(){",
+									"    pm.expect(jsonData.user.userid).to.be.a('number');",
+									"    pm.expect(jsonData.user.userid).to.eql(pm.environment.get('userid'));",
+									"});",
+									"",
+									"pm.test(\"User Language id\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.be.a('number');",
+									"    pm.expect(jsonData.user.Language.LanguagesID).to.eql(pm.environment.get('userLanguageID'));",
+									"});",
+									"",
+									"pm.test(\"User Language Name\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageName).to.eql(pm.environment.get('userLanguageName'));",
+									"});",
+									"",
+									"pm.test(\"User Language Code\", function(){",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.be.a('string');",
+									"    pm.expect(jsonData.user.Language.LanguageCode).to.eql(pm.environment.get('userLanguageCode'));",
+									"});",
+									"",
+									"pm.test(\"User Role ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].RoleID).to.eql(pm.environment.get('userRoleID'));",
+									"});",
+									"",
+									"pm.test(\"User Role Name\", function(){",
+									"    pm.expect(jsonData.user.roles[0].Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].Name).to.eql(pm.environment.get('userRoleName'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.be.a('string');",
+									"    pm.expect(jsonData.user.roles[0].LandingPage).to.eql(pm.environment.get('roleLandingPage'));",
+									"});",
+									"",
+									"pm.test(\"Role Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.roles[0].LandingPageID).to.eql(pm.environment.get('roleLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page ID\", function(){",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.be.a('number');",
+									"    pm.expect(jsonData.user.landingPage.LandingPageID).to.eql(pm.environment.get('userLandingPageID'));",
+									"});",
+									"",
+									"pm.test(\"User Landing Page Name\", function(){",
+									"    pm.expect(jsonData.user.landingPage.Name).to.be.a('string');",
+									"    pm.expect(jsonData.user.landingPage.Name).to.eql(pm.environment.get('userLandingPageName'));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "15a1255f-93b7-42f3-ac4b-d30725b241ce",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/authentication/user"
+					},
+					"response": [
+						{
+							"id": "cdf59f9f-10b6-4f58-a1d5-43d64823ba95",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{baseUrl}}/authentication/user"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Products Controller product Wizard (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "232ce11e-6dfa-4621-9bf0-5613f35a65c7",
+								"exec": [
+									"var body = JSON.parse(responseBody);",
+									"var jsonData = pm.response.json();",
+									"",
+									"///Parsing data from the response body to Placeholders",
+									"",
+									"pm.environment.set('NEWKYGID',jsonData.product.KYGID)// Product ID",
+									"pm.environment.set('creationDate',jsonData.product.CreationDate)// Product Creation Date",
+									"pm.environment.set('attestDoc',jsonData.product.AttestDocCSV)// Attestation Document",
+									"pm.environment.set('dataOwnerID',jsonData.product.DataOwnerID)// Data Owner ID",
+									"pm.environment.set('TrxHash',jsonData.product.L1TrxHash)// Trx Hash",
+									"pm.environment.set('BlockHash',jsonData.product.L1BlockHash)// Block Hash",
+									"pm.environment.set('BlockNumber',jsonData.product.L1BlockNumber)// Block Number",
+									"pm.environment.set('ContractAddress',jsonData.product.L1ContractAddress)// Contract Address",
+									"pm.environment.set('ProductPage',jsonData.product.ViewingProductPage)// Viewing Product Page",
+									"pm.environment.set('productStatusID',jsonData.product.StatusID)// Status ID",
+									"pm.environment.set('FindingsPage',jsonData.product.ViewingFindingsPage)// Viewing Findings Page",
+									"pm.environment.set('previosKYGID',jsonData.product.PreviosKYGID)// Previous Product ID",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"New Product id\", function(){",
+									"    pm.expect(jsonData.product.KYGID).to.be.a('number');",
+									"    pm.expect(jsonData.product.KYGID).to.eql(pm.environment.get('NEWKYGID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Creation Date\", function(){",
+									"   pm.expect(jsonData.product.CreationDate).to.be.a('string');",
+									"    pm.expect(jsonData.product.CreationDate).to.eql(pm.environment.get('creationDate'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attestation Document\", function(){",
+									"    pm.expect(jsonData.product.AttestDocCSV).to.be.a('string');",
+									"    pm.expect(jsonData.product.AttestDocCSV).to.eql(pm.environment.get('attestDoc'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Data Owner ID\", function(){",
+									"    pm.expect(jsonData.product.DataOwnerID).to.be.a('number');",
+									"    pm.expect(jsonData.product.DataOwnerID).to.eql(pm.environment.get('dataOwnerID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"L1 Trx Hash\", function(){",
+									"    pm.expect(jsonData.product.L1TrxHash).to.be.a('string');",
+									"    pm.expect(jsonData.product.L1TrxHash).to.eql(pm.environment.get('TrxHash'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"L1 Block Hash\", function(){",
+									"    pm.expect(jsonData.product.L1BlockHash).to.eql(pm.environment.get('BlockHash'));",
+									"});",
+									"",
+									"pm.test(\"L1 Block Number\", function(){",
+									"    pm.expect(jsonData.product.L1BlockNumber).to.eql(pm.environment.get('BlockNumber'));",
+									"});",
+									"",
+									"pm.test(\"L1 Contract Address\", function(){",
+									"    pm.expect(jsonData.product.L1ContractAddress).to.eql(pm.environment.get('ContractAddress'));",
+									"});",
+									"",
+									"pm.test(\"Viewing Product Page\", function(){",
+									"    pm.expect(jsonData.product.ViewingProductPage).to.eql(pm.environment.get('ProductPage'));",
+									"});",
+									"",
+									"pm.test(\"Product Status ID\", function(){",
+									"    pm.expect(jsonData.product.StatusID).to.be.a('number');",
+									"    pm.expect(jsonData.product.StatusID).to.eql(pm.environment.get('statusID'));",
+									"});",
+									"",
+									"pm.test(\"Viewing Findings Page\", function(){",
+									"    pm.expect(jsonData.product.ViewingFindingsPage).to.eql(pm.environment.get('FindingsPage'));",
+									"});",
+									"",
+									"pm.test(\"Previous Product ID\", function(){",
+									"    pm.expect(jsonData.product.PreviosKYGID).to.eql(pm.environment.get('previosKYGID'));",
+									"});",
+									"",
+									"///Using the For Loop to assert through the details of the Product////",
+									"var assignedItems = pm.response.json().assigned;",
+									"",
+									"for (let i = 0; i < assignedItems.length; i++) {",
+									"",
+									"    ///Parsing data from the response body to Placeholders",
+									"pm.environment.set('prodAttrID',jsonData.assigned[i].ProductAttributeID) /// Product Attribute ID",
+									"pm.environment.set('metaAttrID',jsonData.assigned[i].MetaAttributeID) ///  Meta Attribute ID",
+									"pm.environment.set('labelName',jsonData.assigned[i].LabelName) ///  Label Name",
+									"pm.environment.set('dataType',jsonData.assigned[i].DataType) ///  Data Type",
+									"pm.environment.set('dataSize',jsonData.assigned[i].DataSize) ///  Data Size",
+									"pm.environment.set('ddlbID',jsonData.assigned[i].DDLBID) ///  DDLB ID",
+									"pm.environment.set('elementName',jsonData.assigned[i].ElementName) ///  Element Name",
+									"pm.environment.set('descriptionShort',jsonData.assigned[i].DescriptionShort) ///  Description Short",
+									"pm.environment.set('textRegex',jsonData.assigned[i].TextRegex) ///  Text Regex",
+									"pm.environment.set('textAreaSize',jsonData.assigned[i].TextAreaSize) ///  Text Area Size",
+									"pm.environment.set('attributeValue',jsonData.assigned[i].AttributeValue) ///  Attribute Value",
+									"pm.environment.set('dataOwnerID',jsonData.assigned[i].DataOwnerID) ///  Data Owner ID",
+									"pm.environment.set('userID',jsonData.assigned[i].UserID) ///  User ID",
+									"pm.environment.set('ddlbStart',jsonData.assigned[i].DDLBStart) ///  DDLB Start",
+									"pm.environment.set('permissionTypeID',jsonData.assigned[i].PermissionTypeID) ///  Permission Type ID",
+									"pm.environment.set('permissionName',jsonData.assigned[i].PermissionName) ///  Permission Name",
+									"pm.environment.set('productOwnerID',jsonData.assigned[i].ProductOwnerID) ///  Product Owner ID",
+									"pm.environment.set('createdDate',jsonData.assigned[i].createdAt) /// Created Date",
+									"pm.environment.set('modifiedDate',jsonData.assigned[i].modifiedAt) ///  Modified Date",
+									"pm.environment.set('metaInitiator',jsonData.assigned[i].metaInfo.Initiator) ///  meta Initiator",
+									"var date_created = pm.variables.get(\"date created\");",
+									"pm.environment.set('metaCreatedDate',jsonData.assigned[i].metaInfo.date_created) ///  meta Date Created",
+									"var date_modified = pm.variables.get(\"date modified\");",
+									"pm.environment.set('metaModifiedDate',jsonData.assigned[i].metaInfo.date_modified) ///  meta Date Modified",
+									"pm.environment.set('displayOrder',jsonData.assigned[i].DisplayOrder) ///  Display Order",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Product Attribute ID\", function(){",
+									"    pm.expect(jsonData.assigned[i].ProductAttributeID).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].ProductAttributeID).to.eql(pm.environment.get('prodAttrID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Meta Attribute ID\", function(){",
+									"    pm.expect(jsonData.assigned[i].MetaAttributeID).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].MetaAttributeID).to.eql(pm.environment.get('metaAttrID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Label Name\", function(){",
+									"    pm.expect(jsonData.assigned[i].LabelName).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].LabelName).to.eql(pm.environment.get('labelName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Data Type\", function(){",
+									"    pm.expect(jsonData.assigned[i].DataType).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].DataType).to.eql(pm.environment.get('dataType'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Data Size\", function(){",
+									"    pm.expect(jsonData.assigned[i].DataSize).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].DataSize).to.eql(pm.environment.get('dataSize'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"DDLB ID\", function(){",
+									"    pm.expect(jsonData.assigned[i].DDLBID).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].DDLBID).to.eql(pm.environment.get('ddlbID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Element Name\", function(){",
+									"    pm.expect(jsonData.assigned[i].ElementName).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].ElementName).to.eql(pm.environment.get('elementName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Dups Allowed Status\", function(){",
+									"    pm.expect(jsonData.assigned[i].DupsAllowed).to.be.a('boolean');",
+									"    pm.expect(jsonData.assigned[i].DupsAllowed).to.be.oneOf([true,false]);",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Public Status\", function(){",
+									"    pm.expect(jsonData.assigned[i].Public).to.be.a('boolean');",
+									"    pm.expect(jsonData.assigned[i].Public).to.be.oneOf([true,false]);",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Description Short\", function(){",
+									"    pm.expect(jsonData.assigned[i].DescriptionShort).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].DescriptionShort).to.eql(pm.environment.get('descriptionShort'));",
+									"    ",
+									"});",
+									"pm.test(\"Text Regex\", function(){",
+									"    pm.expect(jsonData.assigned[i].TextRegex).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].TextRegex).to.eql(pm.environment.get('textRegex'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Text Area Size\", function(){",
+									"    pm.expect(jsonData.assigned[i].TextAreaSize).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].TextAreaSize).to.eql(pm.environment.get('textAreaSize'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Required Status\", function(){",
+									"    pm.expect(jsonData.assigned[i].Required).to.be.a('boolean');",
+									"    pm.expect(jsonData.assigned[i].Required).to.be.oneOf([true,false]);",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute Value\", function(){",
+									"    pm.expect(jsonData.assigned[i].AttributeValue).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].AttributeValue).to.eql(pm.environment.get('attributeValue'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Data Owner ID\", function(){",
+									"    pm.expect(jsonData.assigned[i].DataOwnerID).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].DataOwnerID).to.eql(pm.environment.get('dataOwnerID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"User ID\", function(){",
+									"    pm.expect(jsonData.assigned[i].UserID).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].UserID).to.eql(pm.environment.get('userID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"DDLB Start\", function(){",
+									"    pm.expect(jsonData.assigned[i].DDLBStart).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].DDLBStart).to.eql(pm.environment.get('ddlbStart'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"UI Read Only\", function(){",
+									"    pm.expect(jsonData.assigned[i].UIReadOnly).to.be.a('boolean');",
+									"    pm.expect(jsonData.assigned[i].UIReadOnly).to.be.oneOf([true,false]);",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Permission Type ID\", function(){",
+									"    pm.expect(jsonData.assigned[i].PermissionTypeID).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].PermissionTypeID).to.eql(pm.environment.get('permissionTypeID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Permission Name\", function(){",
+									"    pm.expect(jsonData.assigned[i].PermissionName).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].PermissionName).to.eql(pm.environment.get('permissionName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Owner ID\", function(){",
+									"    pm.expect(jsonData.assigned[i].ProductOwnerID).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].ProductOwnerID).to.eql(pm.environment.get('productOwnerID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Creation Date\", function(){",
+									"    pm.expect(jsonData.assigned[i].createdAt).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].createdAt).to.eql(pm.environment.get('createdDate'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Modification Date\", function(){",
+									"    pm.expect(jsonData.assigned[i].modifiedAt).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].modifiedAt).to.eql(pm.environment.get('modifiedDate'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Meta Initiator\", function(){",
+									"    pm.expect(jsonData.assigned[i].metaInfo.Initiator).to.be.a('string');",
+									"    pm.expect(jsonData.assigned[i].metaInfo.Initiator).to.eql(pm.environment.get('metaInitiator'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Date Created\", function(){",
+									"    pm.expect(jsonData.assigned[i].metaInfo.date_created).to.eql(pm.environment.get('metaCreatedDate'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Date Modified\", function(){",
+									"    pm.expect(jsonData.assigned[i].metaInfo.date_modified).to.eql(pm.environment.get('metaModifiedDate'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Product Display Order\", function(){",
+									"    pm.expect(jsonData.assigned[i].DisplayOrder).to.be.a('number');",
+									"    pm.expect(jsonData.assigned[i].DisplayOrder).to.eql(pm.environment.get('displayOrder'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Accepted Request Status\", function(){",
+									"    pm.expect(jsonData.assigned[i].hasAcceptedRequests).to.be.a('boolean');",
+									"    pm.expect(jsonData.assigned[i].hasAcceptedRequests).to.be.oneOf([true,false]);",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"CSV Check Box\", function(){",
+									"    pm.expect(jsonData.assigned[i].IsCSVCheckbox).to.be.a('boolean');",
+									"    pm.expect(jsonData.assigned[i].IsCSVCheckbox).to.be.oneOf([true,false]);",
+									"    ",
+									"});",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "cf4a5b66-65de-40c6-9a0b-1a610a5e60a7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"declarationTypes\": [\n    \"1\",\n    \"1\"\n  ],\n  \"attestationTypes\": [\n    \"1\",\n    \"2\",\n    \"3\",\n    \"4\",\n    \"5\",\n    \"6\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/products/product-wizard"
+					},
+					"response": [
+						{
+							"id": "d7370c28-9ff2-4669-9ed5-a625eb07f55a",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"declarationTypes\": [\n    \"ipsum\",\n    \"commodo aliqua do pariatur\"\n  ],\n  \"attestationTypes\": [\n    \"anim ullamco officia quis labore\",\n    \"consect\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseUrl}}/products/product-wizard"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{}"
+						}
+					]
+				},
+				{
+					"name": "Products Controller get Products (User) (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8f0cc41f-9e25-4a70-bbd3-769893ea13ce",
+								"exec": [
+									"var body = JSON.parse(responseBody);",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.environment.set('Totalno',jsonData.total) ///  Total number of Products",
+									"///Using the For Loop to assert through the details of the products////",
+									"",
+									"for (let i = 0; i < pm.environment.get('Totalno')-1; i++) {",
+									"",
+									"///Parsing data from the response body to Placeholders",
+									"",
+									"pm.environment.set('newKYGID',jsonData.result[i].KYGID)// Product ID",
+									"pm.environment.set('dataOwner',jsonData.result[i].DataOwner)// Data Owner",
+									"pm.environment.set('dataOwnerID',jsonData.result[i].DataOwnerID)// Data Owner ID",
+									"pm.environment.set('companyID',jsonData.result[i].CompanyID)// Company ID",
+									"pm.environment.set('prodname',jsonData.result[i].name)// Product Name",
+									"pm.environment.set('BrandOwner',jsonData.result[i].brandOwner)// Product Brand Owner",
+									"pm.environment.set('prodcategory',jsonData.result[i].category)// Product Category",
+									"pm.environment.set('dateCreated',jsonData.result[i].creationDate)// Product Date Creation",
+									"pm.environment.set('dateModified',jsonData.result[i].modificationDate)// Product Modification Date",
+									"pm.environment.set('prodsKU',jsonData.result[i].sKU)// Product sKU",
+									"pm.environment.set('prodView',jsonData.result[i].viewOnly)// Product View Only Status",
+									"pm.environment.set('BusinessUnit',jsonData.result[i].businessUnit)// Product Business Unit",
+									"pm.environment.set('prodType',jsonData.result[i].type)// Product Type",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Product ID\", function(){",
+									"    pm.expect(jsonData.result[i].KYGID).to.be.a('number');",
+									"    pm.expect(jsonData.result[i].KYGID).to.eql(pm.environment.get('newKYGID'));",
+									"});",
+									"",
+									"pm.test(\"Data Owner\", function(){",
+									"    pm.expect(jsonData.result[i].DataOwner).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].DataOwner).to.eql(pm.environment.get('dataOwner'));",
+									"});",
+									"",
+									"pm.test(\"Data Owner ID\", function(){",
+									"    pm.expect(jsonData.result[i].DataOwnerID).to.be.a('number');",
+									"    pm.expect(jsonData.result[i].DataOwnerID).to.eql(pm.environment.get('dataOwnerID'));",
+									"});",
+									"",
+									"pm.test(\"Company ID\", function(){",
+									"    pm.expect(jsonData.result[i].CompanyID).to.eql(pm.environment.get('companyID'));",
+									"});",
+									"",
+									"pm.test(\"Product Name\", function(){",
+									"    pm.expect(jsonData.result[i].name).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].name).to.eql(pm.environment.get('prodname'));",
+									"});",
+									"",
+									"pm.test(\"Brand Owner\", function(){",
+									"    pm.expect(jsonData.result[i].brandOwner).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].brandOwner).to.eql(pm.environment.get('BrandOwner'));",
+									"});",
+									"",
+									"pm.test(\"Product Category\", function(){",
+									"    pm.expect(jsonData.result[i].category).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].category).to.eql(pm.environment.get('prodcategory'));",
+									"});",
+									"",
+									"pm.test(\"Product Creation Date\", function(){",
+									"    pm.expect(jsonData.result[i].creationDate).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].creationDate).to.eql(pm.environment.get('dateCreated'));",
+									"});",
+									"",
+									"pm.test(\"Product Modification Date\", function(){",
+									"    pm.expect(jsonData.result[i].modificationDate).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].modificationDate).to.eql(pm.environment.get('dateModified'));",
+									"});",
+									"",
+									"pm.test(\"Product sKU\", function(){",
+									"    pm.expect(jsonData.result[i].sKU).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].sKU).to.eql(pm.environment.get('prodsKU'));",
+									"});",
+									"",
+									"pm.test(\"Product View Only\", function(){",
+									"    pm.expect(jsonData.result[i].viewOnly).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].viewOnly).to.eql(pm.environment.get('prodView'));",
+									"});",
+									"",
+									"pm.test(\"Product Business Unit\", function(){",
+									"    pm.expect(jsonData.result[i].businessUnit).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].businessUnit).to.eql(pm.environment.get('BusinessUnit'));",
+									"});",
+									"",
+									"pm.test(\"Product Type\", function(){",
+									"    pm.expect(jsonData.result[i].type).to.be.a('string');",
+									"    pm.expect(jsonData.result[i].type).to.eql(pm.environment.get('prodType'));",
+									"});",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "203a63e4-d2bb-4cfe-8c06-6378ae157030",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products?page=1&limit=100&query=&type=User&orderBy=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "100"
+								},
+								{
+									"key": "query",
+									"value": ""
+								},
+								{
+									"key": "type",
+									"value": "User"
+								},
+								{
+									"key": "orderBy",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "a5e71197-b8f1-44f2-955e-de7565e5431d",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/products?page=-5754955.121394232&limit=-5754955.121394232&query=mollit&type=Role&orderBy=mollit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "-5754955.121394232"
+										},
+										{
+											"key": "limit",
+											"value": "-5754955.121394232"
+										},
+										{
+											"key": "query",
+											"value": "mollit"
+										},
+										{
+											"key": "type",
+											"value": "Role"
+										},
+										{
+											"key": "orderBy",
+											"value": "mollit"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"result\": [\n    {\n      \"KYGID\": -74888312.9009895,\n      \"CreationDate\": \"1978-08-09T15:21:56.354Z\",\n      \"AttestDocCSV\": \"elit sed\",\n      \"DataOwnerID\": -29160529.622670904,\n      \"L1TrxHash\": \"proident elit et\",\n      \"L1BlockHash\": \"eiusmod Excepteur incididunt\",\n      \"L1BlockNumber\": \"sint fugiat\",\n      \"L1ContractAddress\": \"deserun\",\n      \"ViewingProductPage\": false,\n      \"ViewingFindingsPage\": true,\n      \"PreviosKYGID\": 92493168.14497855\n    },\n    {\n      \"KYGID\": -38908429.9984098,\n      \"CreationDate\": \"1983-05-03T00:55:13.111Z\",\n      \"AttestDocCSV\": \"deserunt\",\n      \"DataOwnerID\": -717112.7590607852,\n      \"L1TrxHash\": \"enim adipisicing ullamco\",\n      \"L1BlockHash\": \"in mollit\",\n      \"L1BlockNumber\": \"mollit nulla quis dolore\",\n      \"L1ContractAddress\": \"deserunt Duis\",\n      \"ViewingProductPage\": false,\n      \"ViewingFindingsPage\": false,\n      \"PreviosKYGID\": -27429761.936755836\n    }\n  ],\n  \"total\": 10042428.835016087\n}"
+						}
+					]
+				},
+				{
+					"name": "Products Controller get Att Types (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "560db1b5-bc7a-46d8-9db8-7289b731f92b",
+								"exec": [
+									"var body = JSON.parse(responseBody);",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"//Using the For Loop to assert through the details of the Attributes Type////",
+									"var Items = pm.response.json();",
+									"",
+									"for (let i = 0; i < Items.length; i++) {",
+									"",
+									"    ///Parsing data from the response body to Placeholders",
+									"pm.environment.set('declarationTypesID',jsonData[i].DeclarationTypesID) /// Declaration Types ID",
+									"",
+									"pm.environment.set('attrName',jsonData[i].Name) /// Attribute Name",
+									"pm.environment.set('attrFullName',jsonData[i].FullName) /// Attribute Full Name",
+									"pm.environment.set('fileName',jsonData[i].filename) /// File Name",
+									"pm.environment.set('templateURL',jsonData[i].TemplateURL) /// Template URL",
+									"pm.environment.set('attrSig',jsonData[i].IsESignatureNedeed) /// Attribute Name",
+									"pm.environment.set('FileLinkID',jsonData[i].FileLinkMetaAttributeID) /// File Link Meta Attribute ID",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Declaration Types ID\", function(){",
+									"    pm.expect(jsonData[i].DeclarationTypesID).to.be.a('number');",
+									"    pm.expect(jsonData[i].DeclarationTypesID).to.eql(pm.environment.get('declarationTypesID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute Name\", function(){",
+									"    pm.expect(jsonData[i].Name).to.be.a('string');",
+									"    pm.expect(jsonData[i].Name).to.eql(pm.environment.get('attrName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute Full Name\", function(){",
+									"    pm.expect(jsonData[i].FullName).to.be.a('string');",
+									"    pm.expect(jsonData[i].FullName).to.eql(pm.environment.get('attrFullName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute File Name\", function(){",
+									"    pm.expect(jsonData[i].filename).to.be.a('string');",
+									"    pm.expect(jsonData[i].filename).to.eql(pm.environment.get('fileName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute Template URL\", function(){",
+									"    pm.expect(jsonData[i].TemplateURL).to.eql(pm.environment.get('templateURL'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute Signature Status\", function(){",
+									"    pm.expect(jsonData[i].IsESignatureNedeed).to.be.a('boolean');",
+									"    pm.expect(jsonData[i].IsESignatureNedeed).to.eql(pm.environment.get('attrSig'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute File Link Attribute ID\", function(){",
+									"    pm.expect(jsonData[i].FileLinkMetaAttributeID).to.be.a('number');",
+									"    pm.expect(jsonData[i].FileLinkMetaAttributeID).to.eql(pm.environment.get('FileLinkID'));",
+									"    ",
+									"});",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "995df425-a6d8-4ed3-8a46-ddf3cd301555",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": "{{baseUrl}}/products/all-attestation-types"
+					},
+					"response": [
+						{
+							"id": "60f937a0-6ce6-4acf-adb1-2f8ce0043206",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{baseUrl}}/products/all-attestation-types"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "[\n  {\n    \"DeclarationTypesID\": 68077676.75562823,\n    \"Name\": \"dolor quis velit minim\",\n    \"FullName\": \"fugiat\",\n    \"filename\": \"anim qui in dolor\",\n    \"TemplateURL\": \"eu fugiat nulla pariatur\",\n    \"IsESignatureNedeed\": false,\n    \"FileLinkMetaAttributeID\": -65559560.20207518,\n    \"AttestationFileLinkMetaAttributeID\": -62921718.7971852\n  },\n  {\n    \"DeclarationTypesID\": 86651078.85693172,\n    \"Name\": \"eiusmod dolor sunt aliqua\",\n    \"FullName\": \"consequat ea irure nulla\",\n    \"filename\": \"Excepteur \",\n    \"TemplateURL\": \"ad Excepteur nulla amet\",\n    \"IsESignatureNedeed\": true,\n    \"FileLinkMetaAttributeID\": -48462378.80998352,\n    \"AttestationFileLinkMetaAttributeID\": -57586523.37386163\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Creates new attestation and attestation attributes (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f6b9903-fdf9-481d-a045-ce4a774b07b2",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									"var body = JSON.parse(responseBody);",
+									"var jsonData = pm.response.json();",
+									"",
+									"//Using the For Loop to assert through the details of the Attributes Type////",
+									"var Items = pm.response.json();",
+									"",
+									"for (let i = 0; i < Items.length; i++) {",
+									"    ///Parsing data from the response body to Placeholders",
+									"",
+									"pm.environment.set(\"DOCID\", body[i].DocumentID) /// Document ID",
+									"pm.environment.set('elementName',jsonData[i].ElementName) /// Element Name",
+									"pm.environment.set('labelName',jsonData[i].LabelName) /// Label Name",
+									"pm.environment.set('ddlbStart',jsonData[i].DDLBStart) /// DDLB Start",
+									"pm.environment.set('ddlbID',jsonData[i].DDLBID) /// DDLB ID",
+									"pm.environment.set('attrOrder',jsonData[i].AttributeOrder) /// Attribute Order",
+									"pm.environment.set('attrID',jsonData[i].AttestationAttributeID) /// Attestation Attribute ID",
+									"pm.environment.set('required',jsonData[i].Required) /// Attribute Required Status",
+									"pm.environment.set('uiReadOnly',jsonData[i].UIReadOnly) /// UI Read Only",
+									"pm.environment.set('descriptionShort',jsonData[i].DescriptionShort) /// Attribute Description",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Document ID Successfull\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[i].DocumentID).to.not.be.null;",
+									"    pm.expect(jsonData[i].DocumentID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"DocumentID\");",
+									"    pm.expect(jsonData[i].DocumentID).to.eql(pm.environment.get('DOCID'));",
+									"});",
+									"",
+									"",
+									"pm.test(\"Data Types\", function(){",
+									"    pm.expect(jsonData[i].DataType).to.not.be.null;",
+									"    pm.expect(jsonData[i].DataType).to.be.a('string');",
+									"    pm.expect(jsonData[i].DataType).to.be.oneOf([\"VARCHAR\",\"INT\"]);",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Element Name\", function(){",
+									"    pm.expect(jsonData[i].ElementName).to.not.be.null;",
+									"    pm.expect(jsonData[i].ElementName).to.be.a('string');",
+									"    pm.expect(jsonData[i].ElementName).to.eql(pm.environment.get('elementName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Label Name\", function(){",
+									"    pm.expect(jsonData[i].LabelName).to.not.be.null;",
+									"    pm.expect(jsonData[i].LabelName).to.be.a('string');",
+									"    pm.expect(jsonData[i].LabelName).to.eql(pm.environment.get('labelName'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"DDLB Start\", function(){",
+									"    pm.expect(jsonData[i].DDLBStart).to.not.be.null;",
+									"    pm.expect(jsonData[i].DDLBStart).to.be.a('number');",
+									"    pm.expect(jsonData[i].DDLBStart).to.eql(pm.environment.get('ddlbStart'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"DDLB ID\", function(){",
+									"    pm.expect(jsonData[i].DDLBID).to.not.be.null;",
+									"    pm.expect(jsonData[i].DDLBID).to.be.a('number');",
+									"    pm.expect(jsonData[i].DDLBID).to.eql(pm.environment.get('ddlbID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attribute Order\", function(){",
+									"    pm.expect(jsonData[i].AttributeOrder).to.not.be.null;",
+									"    pm.expect(jsonData[i].AttributeOrder).to.be.a('number');",
+									"    pm.expect(jsonData[i].AttributeOrder).to.eql(pm.environment.get('attrOrder'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attestation Attribute ID\", function(){",
+									"    pm.expect(jsonData[i].AttestationAttributeID).to.not.be.null;",
+									"    pm.expect(jsonData[i].AttestationAttributeID).to.be.a('number');",
+									"    pm.expect(jsonData[i].AttestationAttributeID).to.eql(pm.environment.get('attrID'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attestation Attribute Required\", function(){",
+									"    pm.expect(jsonData[i].Required).to.not.be.null;",
+									"    pm.expect(jsonData[i].Required).to.be.a('number');",
+									"    pm.expect(jsonData[i].Required).to.eql(pm.environment.get('required'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attestation Attribute UI Read Only\", function(){",
+									"    pm.expect(jsonData[i].UIReadOnly).to.not.be.null;",
+									"    pm.expect(jsonData[i].UIReadOnly).to.be.a('number');",
+									"    pm.expect(jsonData[i].UIReadOnly).to.eql(pm.environment.get('uiReadOnly'));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Attestation Attribute Description\", function(){",
+									"    pm.expect(jsonData[i].DescriptionShort).to.not.be.null;",
+									"    pm.expect(jsonData[i].DescriptionShort).to.be.a('string');",
+									"    pm.expect(jsonData[i].DescriptionShort).to.eql(pm.environment.get('descriptionShort'));",
+									"    ",
+									"});",
+									"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "65a45791-6255-41b9-94e5-1f41f4e91644",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"AttestationTypeID\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/attestations/:KYGID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestations",
+								":KYGID"
+							],
+							"variable": [
+								{
+									"id": "9d23064a-2a91-4f18-a793-b71f26b9474f",
+									"key": "KYGID",
+									"value": "{{NEWKYGID}}",
+									"description": "(Required) ",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "0caccb65-27fa-4f35-b656-7217fc3b76ff",
+							"name": "response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"AttestationTypeID\": -11610867.106028259\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/attestations/:KYGID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestations",
+										":KYGID"
+									],
+									"variable": [
+										{
+											"key": "KYGID",
+											"value": "-5754955.121394232",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"DocumentID\": -24851178.010619357,\n  \"LabelName\": \"reprehenderit labore nulla elit ea\",\n  \"AttributeValue\": {},\n  \"ElementName\": \"cillum occaecat labore\",\n  \"DataType\": \"cupidatat nisi Ut cillum\",\n  \"AttestationAttributeID\": -39738904.74663424,\n  \"DDLBStart\": 75920471.86865893,\n  \"DDLBID\": -25295870.967746124,\n  \"Required\": {},\n  \"UIReadOnly\": false,\n  \"DescriptionShort\": \"labore mollit non Lorem\",\n  \"AttributeOrder\": -16072382.246257171\n}"
+						}
+					]
+				},
+				{
+					"name": "Return list of attestations belongs to specific product (New User)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ec2c829c-ddb1-4312-adb9-24e785135f63",
+								"exec": [
+									"//var kid = {{NEWKYGID}};",
+									"",
+									"//pm.environment.set(\"KYID\",kid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6dfe46ac-fd85-499f-bbdc-e021e4352713",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"///Parsing data from the response body to Placeholders",
+									"",
+									"pm.environment.set(\"docID\", jsonData[0].DocumentID) /// Document ID",
+									"pm.environment.set('statusName',jsonData[0].StatusName) /// Status Name",
+									"pm.environment.set('jurisdiction',jsonData[0].Jurisdiction) /// Attestation Jurisdiction",
+									"pm.environment.set('attestationTypeID',jsonData[0].AttestationTypeID) /// Attestation Type ID",
+									"pm.environment.set('type',jsonData[0].Type) /// Attestation Type",
+									"pm.environment.set('status',jsonData[0].Status) /// Attestation Status",
+									"pm.environment.set('stateID',jsonData[0].StateID) /// Attestation State ID ",
+									"pm.environment.set('attestationURL',jsonData[0].URL) /// Attestation URL",
+									"pm.environment.set('attestor',jsonData[0].Attestor) /// Attestation Attestor",
+									"pm.environment.set('attribute',jsonData[0].Attribute) /// Attestation Attribute",
+									"pm.environment.set('value',jsonData[0].Value) /// Attestation Value",
+									"pm.environment.set('attributeName',jsonData[0].AttributeName) /// Attestation Attribute Name",
+									"pm.environment.set('dateCreation',jsonData[0].DateCreation) /// Attestation Date Creation",
+									"pm.environment.set('Color',jsonData[0].color) /// Attestation color",
+									"pm.environment.set('wFStatusID',jsonData[0].WFStatusID) /// Attestation WF Status ID",
+									"pm.environment.set('wFQueueID',jsonData[0].WFQueueID) /// Attestation WF Queue ID",
+									"pm.environment.set('PageID',jsonData[0].pageID) /// Attestation page ID",
+									"pm.environment.set('vendorID',jsonData[0].VendorID) /// Attestation Vendor ID",
+									"pm.environment.set('attestationDocumentUrl',jsonData[0].AttestationDocumentUrl) /// Attestation Document Url",
+									"pm.environment.set('pageURL',jsonData[0].page.url) /// Attestation Page URL",
+									"pm.environment.set('pageID',jsonData[0].page.PageID) /// Attestation Page ID",
+									"pm.environment.set('pagetooltip',jsonData[0].page.tooltip) /// Attestation tool tip",
+									"pm.environment.set('pagetitle',jsonData[0].page.title) /// Attestation title",
+									"pm.environment.set('pageName',jsonData[0].page.Name) /// Attestation title",
+									"",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Document ID Successfull\", function () {",
+									"    pm.expect(jsonData[0].DocumentID).to.not.be.null;",
+									"    pm.expect(jsonData[0].DocumentID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"DocumentID\");",
+									"    pm.expect(jsonData[0].DocumentID).to.eql(pm.environment.get('docID'));",
+									"});",
+									"",
+									"pm.test(\"Status Name Successfull\", function () {",
+									"    pm.expect(jsonData[0].StatusName).to.not.be.null;",
+									"    pm.expect(jsonData[0].StatusName).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"StatusName\");",
+									"    pm.expect(jsonData[0].StatusName).to.eql(pm.environment.get('statusName'));",
+									"});",
+									"",
+									"pm.test(\"Jurisdiction Successfull\", function () {",
+									"    pm.expect(jsonData[0].Jurisdiction).to.not.be.null;",
+									"    pm.expect(jsonData[0].Jurisdiction).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"Jurisdiction\");",
+									"    pm.expect(jsonData[0].Jurisdiction).to.eql(pm.environment.get('jurisdiction'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Type ID\", function () {",
+									"    pm.expect(jsonData[0].AttestationTypeID).to.not.be.null;",
+									"    pm.expect(jsonData[0].AttestationTypeID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"AttestationTypeID\");",
+									"    pm.expect(jsonData[0].AttestationTypeID).to.eql(pm.environment.get('attestationTypeID'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Type\", function () {",
+									"    pm.expect(jsonData[0].Type).to.not.be.null;",
+									"    pm.expect(jsonData[0].Type).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"Type\");",
+									"    pm.expect(jsonData[0].Type).to.eql(pm.environment.get('type'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Status\", function () {",
+									"    pm.expect(jsonData[0].Status).to.not.be.null;",
+									"    pm.expect(jsonData[0].Status).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"Status\");",
+									"    pm.expect(jsonData[0].Status).to.eql(pm.environment.get('status'));",
+									"});",
+									"",
+									"pm.test(\"Attestation State ID\", function () {",
+									"    pm.expect(jsonData[0].StateID).to.not.be.null;",
+									"    pm.expect(jsonData[0].StateID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"StateID\");",
+									"    pm.expect(jsonData[0].StateID).to.eql(pm.environment.get('stateID'));",
+									"});",
+									"",
+									"pm.test(\"Attestation URL\", function () {",
+									"    pm.expect(jsonData[0].URL).to.not.be.null;",
+									"    pm.expect(jsonData[0].URL).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"URL\");",
+									"    pm.expect(jsonData[0].URL).to.eql(pm.environment.get('attestationURL'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Attestor\", function () {",
+									"    pm.expect(jsonData[0].Attestor).to.not.be.null;",
+									"    pm.expect(jsonData[0].Attestor).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"Attestor\");",
+									"    pm.expect(jsonData[0].Attestor).to.eql(pm.environment.get('attestor'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Attribute\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Attribute\");",
+									"    pm.expect(jsonData[0].Attribute).to.eql(pm.environment.get('attribute'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Value\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Value\");",
+									"    pm.expect(jsonData[0].Value).to.eql(pm.environment.get('value'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Attribute Name\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"AttributeName\");",
+									"    pm.expect(jsonData[0].AttributeName).to.eql(pm.environment.get('attributeName'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Date Creation\", function () {",
+									"    pm.expect(jsonData[0].DateCreation).to.not.be.null;",
+									"    pm.expect(jsonData[0].DateCreation).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"DateCreation\");",
+									"    pm.expect(jsonData[0].DateCreation).to.eql(pm.environment.get('dateCreation'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Color\", function () {",
+									"    pm.expect(jsonData[0].color).to.not.be.null;",
+									"    pm.expect(jsonData[0].color).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"color\");",
+									"    pm.expect(jsonData[0].color).to.eql(pm.environment.get('Color'));",
+									"});",
+									"",
+									"pm.test(\"Attestation WF Status ID\", function () {",
+									"    pm.expect(jsonData[0].WFStatusID).to.not.be.null;",
+									"    pm.expect(jsonData[0].WFStatusID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"WFStatusID\");",
+									"    pm.expect(jsonData[0].WFStatusID).to.eql(pm.environment.get('wFStatusID'));",
+									"});",
+									"",
+									"pm.test(\"Attestation WF Queue ID\", function () {",
+									"    pm.expect(jsonData[0].WFQueueID).to.not.be.null;",
+									"    pm.expect(jsonData[0].WFQueueID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"WFQueueID\");",
+									"    pm.expect(jsonData[0].WFQueueID).to.eql(pm.environment.get('wFQueueID'));",
+									"});",
+									"",
+									"pm.test(\"Attestation page ID\", function () {",
+									"    pm.expect(jsonData[0].pageID).to.not.be.null;",
+									"    pm.expect(jsonData[0].pageID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"pageID\");",
+									"    pm.expect(jsonData[0].pageID).to.eql(pm.environment.get('PageID'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Vendor ID\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"VendorID\");",
+									"    pm.expect(jsonData[0].VendorID).to.eql(pm.environment.get('vendorID'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Document Url\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"AttestationDocumentUrl\");",
+									"    pm.expect(jsonData[0].AttestationDocumentUrl).to.eql(pm.environment.get('attestationDocumentUrl'));",
+									"});",
+									"",
+									"pm.test(\"Attestation page url\", function () {",
+									"    pm.expect(jsonData[0].page.url).to.not.be.null;",
+									"    pm.expect(jsonData[0].page.url).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"url\");",
+									"    pm.expect(jsonData[0].page.url).to.eql(pm.environment.get('pageURL'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Page ID\", function () {",
+									"    pm.expect(jsonData[0].page.PageID).to.not.be.null;",
+									"    pm.expect(jsonData[0].page.PageID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"PageID\");",
+									"    pm.expect(jsonData[0].page.PageID).to.eql(pm.environment.get('pageID'));",
+									"});",
+									"",
+									"pm.test(\"Attestation tool tip\", function () {",
+									"    pm.expect(jsonData[0].page.tooltip).to.not.be.null;",
+									"    pm.expect(jsonData[0].page.tooltip).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"tooltip\");",
+									"    pm.expect(jsonData[0].page.tooltip).to.eql(pm.environment.get('pagetooltip'));",
+									"});",
+									"",
+									"pm.test(\"Attestation title\", function () {",
+									"    pm.expect(jsonData[0].page.title).to.not.be.null;",
+									"    pm.expect(jsonData[0].page.title).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"title\");",
+									"    pm.expect(jsonData[0].page.title).to.eql(pm.environment.get('pagetitle'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Name\", function () {",
+									"    pm.expect(jsonData[0].page.Name).to.not.be.null;",
+									"    pm.expect(jsonData[0].page.Name).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"Name\");",
+									"    pm.expect(jsonData[0].page.Name).to.eql(pm.environment.get('pageName'));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "178e0473-0d95-4856-91fd-579e4aca899c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/attestations/:KYGID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestations",
+								":KYGID"
+							],
+							"variable": [
+								{
+									"id": "82d775d6-0495-43f4-87cf-ddaf3ab2ec14",
+									"key": "KYGID",
+									"value": "{{NEWKYGID}}",
+									"description": "(Required) ",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "2c8b621c-dc78-46fe-89f5-0e70d47c92cd",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/attestations/:KYGID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestations",
+										":KYGID"
+									],
+									"variable": [
+										{
+											"key": "KYGID",
+											"value": "-5754955.121394232",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"DocumentID\": -24851178.010619357,\n  \"LabelName\": \"reprehenderit labore nulla elit ea\",\n  \"AttributeValue\": {},\n  \"ElementName\": \"cillum occaecat labore\",\n  \"DataType\": \"cupidatat nisi Ut cillum\",\n  \"AttestationAttributeID\": -39738904.74663424,\n  \"DDLBStart\": 75920471.86865893,\n  \"DDLBID\": -25295870.967746124,\n  \"Required\": {},\n  \"UIReadOnly\": false,\n  \"DescriptionShort\": \"labore mollit non Lorem\",\n  \"AttributeOrder\": -16072382.246257171\n}"
+						}
+					]
+				},
+				{
+					"name": "Return document attributes (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "129211fb-4f1b-4824-9ffa-6288775d32c5",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Support Attestor Evaluation Status\", function () {",
+									"    pm.expect(jsonData.doesSupportAttestorEvaulation).to.not.be.null;",
+									"    pm.expect(jsonData.doesSupportAttestorEvaulation).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"doesSupportAttestorEvaulation\");",
+									"    pm.expect(jsonData.doesSupportAttestorEvaulation).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"Support Oracle Evaluation Status\", function () {",
+									"    pm.expect(jsonData.doesSupportOracleEvaulation).to.not.be.null;",
+									"    pm.expect(jsonData.doesSupportOracleEvaulation).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"doesSupportOracleEvaulation\");",
+									"    pm.expect(jsonData.doesSupportOracleEvaulation).to.eql(false);",
+									"});",
+									"",
+									"var Items = pm.response.json().documentAttributes;",
+									"",
+									"for (let i = 0; i < Items.length; i++) {",
+									"",
+									"///Parsing data from the response body to Placeholders",
+									"",
+									"pm.environment.set(\"attestationAttID\", jsonData.documentAttributes[i].AttestationAttributeID) /// Attestation Attribute ID",
+									"pm.environment.set(\"documentID\", jsonData.documentAttributes[i].DocumentID) /// Document ID",
+									"pm.environment.set(\"attributeValue\", jsonData.documentAttributes[i].AttributeValue) /// Attribute Value",
+									"pm.environment.set(\"attributeOrder\", jsonData.documentAttributes[i].AttributeOrder) /// Attribute Order",
+									"pm.environment.set(\"ddlbID\", jsonData.documentAttributes[i].DDLBID) /// DDLB ID",
+									"pm.environment.set(\"ddlbStart\", jsonData.documentAttributes[i].DDLBStart) /// DDLB Start",
+									"pm.environment.set(\"uiReadOnly\", jsonData.documentAttributes[i].UIReadOnly) /// UI Read Only",
+									"pm.environment.set(\"required\", jsonData.documentAttributes[i].Required) /// Required Status",
+									"pm.environment.set(\"labelName\", jsonData.documentAttributes[i].LabelName) /// Label Name",
+									"pm.environment.set(\"slaveRights\", jsonData.documentAttributes[i].SlaveRights) /// Slave Rights",
+									"pm.environment.set(\"masterOwner\", jsonData.documentAttributes[i].MasterOwner) /// Master Owner",
+									"pm.environment.set(\"elementName\", jsonData.documentAttributes[i].ElementName) /// Element Name",
+									"pm.environment.set(\"descriptionShort\", jsonData.documentAttributes[i].DescriptionShort) /// Document Description",
+									"pm.environment.set(\"formQuestionID\", jsonData.documentAttributes[i].FormQuestionID) /// Form Question ID",
+									"pm.environment.set(\"CSVCheckbox\", jsonData.documentAttributes[i].IsCSVCheckbox) /// CSV Check box",
+									"pm.environment.set(\"attestationTypeID\", jsonData.documentAttributes[i].AttestationTypeID) /// Attestation Type ID",
+									"",
+									"",
+									"",
+									"",
+									"/// Running Assertions on the responsebody",
+									"",
+									"pm.test(\"Attestation Attribute ID\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].AttestationAttributeID).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].AttestationAttributeID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"AttestationAttributeID\");",
+									"    pm.expect(jsonData.documentAttributes[i].AttestationAttributeID).to.eql(pm.environment.get('attestationAttID'));",
+									"});",
+									"",
+									"pm.test(\"Document ID\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].DocumentID).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].DocumentID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"DocumentID\");",
+									"    pm.expect(jsonData.documentAttributes[i].DocumentID).to.eql(pm.environment.get('documentID'));",
+									"});",
+									"",
+									"pm.test(\"Attribute Value\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].AttributeValue).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"AttributeValue\");",
+									"    pm.expect(jsonData.documentAttributes[i].AttributeValue).to.eql(pm.environment.get('attributeValue'));",
+									"});",
+									"",
+									"pm.test(\"Attribute Order\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].AttributeOrder).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].AttributeOrder).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"AttributeOrder\");",
+									"    pm.expect(jsonData.documentAttributes[i].AttributeOrder).to.eql(pm.environment.get('attributeOrder'));",
+									"});",
+									"",
+									"pm.test(\"DDLB ID\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].DDLBID).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].DDLBID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"DDLBID\");",
+									"    pm.expect(jsonData.documentAttributes[i].DDLBID).to.eql(pm.environment.get('ddlbID'));",
+									"});",
+									"",
+									"pm.test(\"DDLB Start\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].DDLBStart).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].DDLBStart).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"DDLBStart\");",
+									"    pm.expect(jsonData.documentAttributes[i].DDLBStart).to.eql(pm.environment.get('ddlbStart'));",
+									"});",
+									"",
+									"pm.test(\"UI Read Only\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].UIReadOnly).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].UIReadOnly).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"UIReadOnly\");",
+									"    pm.expect(jsonData.documentAttributes[i].UIReadOnly).to.eql(pm.environment.get('uiReadOnly'));",
+									"});",
+									"",
+									"pm.test(\"Required Status\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].Required).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].Required).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"Required\");",
+									"    pm.expect(jsonData.documentAttributes[i].Required).to.eql(pm.environment.get('required'));",
+									"});",
+									"",
+									"pm.test(\"Label Name\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].LabelName).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].LabelName).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"LabelName\");",
+									"    pm.expect(jsonData.documentAttributes[i].LabelName).to.eql(pm.environment.get('labelName'));",
+									"});",
+									"",
+									"pm.test(\"Slave Rights\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].SlaveRights).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].SlaveRights).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"SlaveRights\");",
+									"    pm.expect(jsonData.documentAttributes[i].SlaveRights).to.eql(pm.environment.get('slaveRights'));",
+									"});",
+									"",
+									"pm.test(\"Master Owner\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].MasterOwner).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].MasterOwner).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"MasterOwner\");",
+									"    pm.expect(jsonData.documentAttributes[i].MasterOwner).to.eql(pm.environment.get('masterOwner'));",
+									"});",
+									"",
+									"pm.test(\"Element Name\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].ElementName).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].ElementName).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"ElementName\");",
+									"    pm.expect(jsonData.documentAttributes[i].ElementName).to.eql(pm.environment.get('elementName'));",
+									"});",
+									"",
+									"pm.test(\"Document Description\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].DescriptionShort).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].DescriptionShort).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"DescriptionShort\");",
+									"    pm.expect(jsonData.documentAttributes[i].DescriptionShort).to.eql(pm.environment.get('descriptionShort'));",
+									"});",
+									"",
+									"pm.test(\"Data Type\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].DataType).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].DataType).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"DataType\");",
+									"    pm.expect(jsonData.documentAttributes[i].DataType).to.be.oneOf([\"VARCHAR\",\"INT\"]);",
+									"});",
+									"",
+									"pm.test(\"Form Question ID\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"FormQuestionID\");",
+									"    pm.expect(jsonData.documentAttributes[i].FormQuestionID).to.eql(pm.environment.get('formQuestionID'));",
+									"});",
+									"",
+									"pm.test(\"CSV Check box\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].IsCSVCheckbox).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].IsCSVCheckbox).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"IsCSVCheckbox\");",
+									"    pm.expect(jsonData.documentAttributes[i].IsCSVCheckbox).to.eql(pm.environment.get('CSVCheckbox'));",
+									"});",
+									"",
+									"pm.test(\"Attestation Type ID\", function () {",
+									"    pm.expect(jsonData.documentAttributes[i].AttestationTypeID).to.not.be.null;",
+									"    pm.expect(jsonData.documentAttributes[i].AttestationTypeID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"AttestationTypeID\");",
+									"    pm.expect(jsonData.documentAttributes[i].AttestationTypeID).to.eql(pm.environment.get('attestationTypeID'));",
+									"});",
+									"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "0626f06f-9154-4d34-b272-9d4942505eb6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/attestations/attributes/:DocumentID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestations",
+								"attributes",
+								":DocumentID"
+							],
+							"variable": [
+								{
+									"id": "41d3621f-4eb2-46b7-bc62-aa9327de46cd",
+									"key": "DocumentID",
+									"value": "{{DOCID}}",
+									"description": "(Required) ",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "31a1acc9-5b83-485f-a4e2-c26e3d70f206",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/attestations/attributes/:DocumentID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestations",
+										"attributes",
+										":DocumentID"
+									],
+									"variable": [
+										{
+											"key": "DocumentID",
+											"value": "-5754955.121394232",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"doesSupportAttestorEvaulation\": false,\n  \"doesSupportOracleEvaulation\": true,\n  \"documentAttributes\": [\n    {\n      \"AttestationAttributeID\": 93379260.95700285,\n      \"DocumentID\": -1580832.3579271585,\n      \"AttributeValue\": {},\n      \"AttributeOrder\": 59797924.829414606,\n      \"DDLBID\": 8409577.494549885,\n      \"DDLBStart\": -58154045.53374997,\n      \"UIReadOnly\": -33791386.899956025,\n      \"Required\": false,\n      \"LabelName\": \"veniam labore magna nostrud\",\n      \"ElementName\": \"ea labore proident\",\n      \"DescriptionShort\": \"esse laboris\",\n      \"DataType\": \"d\",\n      \"FormQuestionID\": 86758621.18196455\n    },\n    {\n      \"AttestationAttributeID\": -34211373.43120058,\n      \"DocumentID\": -51311230.544781685,\n      \"AttributeValue\": {},\n      \"AttributeOrder\": -5442611.168536663,\n      \"DDLBID\": -23512100.57898681,\n      \"DDLBStart\": -60747576.69287636,\n      \"UIReadOnly\": -77527619.78106774,\n      \"Required\": false,\n      \"LabelName\": \"Lorem fugiat aute proident\",\n      \"ElementName\": \"sit eu sint\",\n      \"DescriptionShort\": \"commodo nulla dolor\",\n      \"DataType\": \"pariatur cupidatat commodo non\",\n      \"FormQuestionID\": -70456908.19675912\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Attestation Process Controller chosen Flow (New User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94017293-2cc0-4f98-8694-17f079b03751",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"////Assertion for File URL/////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"fileUrl\", jsonData.FileUrl) /// Attestation Attribute ID",
+									"pm.test(\"Attestation Attribute ID\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"FileUrl\");",
+									"    pm.expect(jsonData.FileUrl).to.eql(pm.environment.get('fileUrl'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for Supervisor////////////////////////////////////////",
+									"",
+									"pm.test(\"Supervisor Status\", function () {",
+									"    pm.expect(jsonData.isSupervisor).to.not.be.null;",
+									"    pm.expect(jsonData.isSupervisor).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"isSupervisor\");",
+									"    pm.expect(jsonData.isSupervisor).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Product Owner////////////////////////////////////////",
+									"",
+									"pm.test(\"Product Owner Status\", function () {",
+									"    pm.expect(jsonData.isProductOwner).to.not.be.null;",
+									"    pm.expect(jsonData.isProductOwner).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"isProductOwner\");",
+									"    pm.expect(jsonData.isProductOwner).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for Supervisor State////////////////////////////////////////",
+									"",
+									"pm.test(\"Supervisor State\", function () {",
+									"    pm.expect(jsonData.hasSupervisorState).to.not.be.null;",
+									"    pm.expect(jsonData.hasSupervisorState).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"hasSupervisorState\");",
+									"    pm.expect(jsonData.hasSupervisorState).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for WF State ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"wFStateID\", jsonData.currentState.WFStateID)",
+									"pm.test(\"WF State ID\", function () {",
+									"    pm.expect(jsonData.WFStateID).to.not.be.null;",
+									"    pm.expect(jsonData.currentState.WFStateID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"WFStateID\");",
+									"    pm.expect(jsonData.currentState.WFStateID).to.eql(pm.environment.get('wFStateID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for WF Name////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"wFName\", jsonData.currentState.WFName)",
+									"pm.test(\"WF Name\", function () {",
+									"    pm.expect(jsonData.currentState.WFName).to.not.be.null;",
+									"    pm.expect(jsonData.currentState.WFName).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"WFName\");",
+									"    pm.expect(jsonData.currentState.WFName).to.eql(pm.environment.get('wFName'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for Execution Order////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"executionOrder\", jsonData.currentState.ExecutionOrder)",
+									"pm.test(\"Execution Order\", function () {",
+									"    pm.expect(jsonData.currentState.ExecutionOrder).to.not.be.null;",
+									"    pm.expect(jsonData.currentState.ExecutionOrder).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"ExecutionOrder\");",
+									"    pm.expect(jsonData.currentState.ExecutionOrder).to.eql(pm.environment.get('executionOrder'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for color State////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"Color\", jsonData.currentState.color)",
+									"pm.test(\"color State\", function () {",
+									"    pm.expect(jsonData.currentState.color).to.not.be.null;",
+									"    pm.expect(jsonData.currentState.color).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"color\");",
+									"    pm.expect(jsonData.currentState.color).to.eql(pm.environment.get('Color'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for Company CSV////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"companyCSV\", jsonData.currentState.CompanyCSV)",
+									"pm.test(\"Company CSV\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"CompanyCSV\");",
+									"    pm.expect(jsonData.currentState.CompanyCSV).to.eql(pm.environment.get('companyCSV'));",
+									"});",
+									"",
+									"///////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Page ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"PageID\", jsonData.currentState.pageID)",
+									"pm.test(\"page ID\", function () {",
+									"    pm.expect(jsonData.currentState.pageID).to.not.be.null;",
+									"    pm.expect(jsonData.currentState.pageID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"pageID\");",
+									"    pm.expect(jsonData.currentState.pageID).to.eql(pm.environment.get('PageID'));",
+									"});",
+									"",
+									"///////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Invite Attestor////////////////////////////////////////",
+									"",
+									"pm.test(\"Invite Attestor\", function () {",
+									"    pm.expect(jsonData.shouldInviteAttestor).to.not.be.null;",
+									"    pm.expect(jsonData.shouldInviteAttestor).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"shouldInviteAttestor\");",
+									"    pm.expect(jsonData.shouldInviteAttestor).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Supervisor ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"supervisorID\", jsonData.SupervisorID)",
+									"pm.test(\"Supervisor ID\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"SupervisorID\");",
+									"    pm.expect(jsonData.SupervisorID).to.eql(pm.environment.get('supervisorID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Attestation Type Name////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"AttestationTypeName\", jsonData.attestationTypeName)",
+									"pm.test(\"Attestation Type Name\", function () {",
+									"    pm.expect(jsonData.attestationTypeName).to.not.be.null;",
+									"    pm.expect(jsonData.attestationTypeName).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"attestationTypeName\");",
+									"    pm.expect(jsonData.attestationTypeName).to.eql(pm.environment.get('AttestationTypeName'));",
+									"});",
+									"",
+									"///////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Attestation Type Id////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"AttestationTypeId\", jsonData.attestationTypeId)",
+									"pm.test(\"attestation Type Id\", function () {",
+									"    pm.expect(jsonData.attestationTypeId).to.not.be.null;",
+									"    pm.expect(jsonData.attestationTypeId).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"attestationTypeId\");",
+									"    pm.expect(jsonData.attestationTypeId).to.eql(pm.environment.get('AttestationTypeId'));",
+									"});",
+									"",
+									"///////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Queue Rejected Status////////////////////////////////////////",
+									"",
+									"pm.test(\"Queue Rejected Status\", function () {",
+									"    pm.expect(jsonData.isQueueRejected).to.not.be.null;",
+									"    pm.expect(jsonData.isQueueRejected).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"isQueueRejected\");",
+									"    pm.expect(jsonData.isQueueRejected).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Attestation Owner////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"AttestationOwner\", jsonData.attestationOwner)",
+									"pm.test(\"Attestation Owner\", function () {",
+									"    pm.expect(jsonData.attestationOwner).to.not.be.null;",
+									"    pm.expect(jsonData.attestationOwner).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"attestationTypeId\");",
+									"    pm.expect(jsonData.attestationOwner).to.eql(pm.environment.get('AttestationOwner'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Attestor////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"Attestor\", jsonData.attestor)",
+									"pm.test(\"attestor \", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"attestor\");",
+									"    pm.expect(jsonData.attestor).to.eql(pm.environment.get('Attestor'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for Last WF Queue ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"LastWFQueueID\", jsonData.lastWFQueueID)",
+									"pm.test(\"Last WF Queue ID\", function () {",
+									"    pm.expect(jsonData.lastWFQueueID).to.not.be.null;",
+									"    pm.expect(jsonData.lastWFQueueID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"lastWFQueueID\");",
+									"    pm.expect(jsonData.lastWFQueueID).to.eql(pm.environment.get('LastWFQueueID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for all Question Answered////////////////////////////////////////",
+									"",
+									"pm.test(\"All Question Answered\", function () {",
+									"    pm.expect(jsonData.allQuestionAnswered).to.not.be.null;",
+									"    pm.expect(jsonData.allQuestionAnswered).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"allQuestionAnswered\");",
+									"    pm.expect(jsonData.allQuestionAnswered).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for all Attestation Attributes Answered////////////////////////////////////////",
+									"",
+									"pm.test(\"All Attestation Attributes Answered\", function () {",
+									"    pm.expect(jsonData.allAttestationAttributesAnswered).to.not.be.null;",
+									"    pm.expect(jsonData.allAttestationAttributesAnswered).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"allAttestationAttributesAnswered\");",
+									"    pm.expect(jsonData.allAttestationAttributesAnswered).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for all Core Attributes Answered////////////////////////////////////////",
+									"",
+									"pm.test(\"All Core Attributes Answered\", function () {",
+									"    pm.expect(jsonData.allCoreAttributesAnswered).to.not.be.null;",
+									"    pm.expect(jsonData.allCoreAttributesAnswered).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"allCoreAttributesAnswered\");",
+									"    pm.expect(jsonData.allCoreAttributesAnswered).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for accepted Attestor Answers////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"AcceptedAttestorAnswers\", jsonData.acceptRejectData.acceptedAttestorAnswers)",
+									"pm.test(\"Accepted Attestor Answers\", function () {",
+									"    pm.expect(jsonData.acceptRejectData.acceptedAttestorAnswers).to.not.be.null;",
+									"    pm.expect(jsonData.acceptRejectData.acceptedAttestorAnswers).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"acceptedAttestorAnswers\");",
+									"    pm.expect(jsonData.acceptRejectData.acceptedAttestorAnswers).to.eql(pm.environment.get('AcceptedAttestorAnswers'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Accepted Oracle Results////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"AcceptedOracleResults\", jsonData.acceptRejectData.acceptedOracleResults)",
+									"pm.test(\"Accepted Oracle Results\", function () {",
+									"    pm.expect(jsonData.acceptRejectData.acceptedOracleResults).to.not.be.null;",
+									"    pm.expect(jsonData.acceptRejectData.acceptedOracleResults).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"acceptedOracleResults\");",
+									"    pm.expect(jsonData.acceptRejectData.acceptedOracleResults).to.eql(pm.environment.get('AcceptedOracleResults'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for not Accepted Oracle Results////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"NotAcceptedOracleResults\", jsonData.acceptRejectData.notAcceptedOracleResults)",
+									"pm.test(\"not Accepted Oracle Results\", function () {",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedOracleResults).to.not.be.null;",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedOracleResults).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"notAcceptedOracleResults\");",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedOracleResults).to.eql(pm.environment.get('NotAcceptedOracleResults'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for not Accepted Oracle Results////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"NotAcceptedOracleResults\", jsonData.acceptRejectData.notAcceptedOracleResults)",
+									"pm.test(\"not Accepted Oracle Results\", function () {",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedOracleResults).to.not.be.null;",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedOracleResults).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"notAcceptedOracleResults\");",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedOracleResults).to.eql(pm.environment.get('NotAcceptedOracleResults'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for not Accepted Attestor Answers////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"NotAcceptedAttestorAnswers\", jsonData.acceptRejectData.notAcceptedAttestorAnswers)",
+									"pm.test(\"not Accepted Attestor Answers\", function () {",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedAttestorAnswers).to.not.be.null;",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedAttestorAnswers).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"notAcceptedAttestorAnswers\");",
+									"    pm.expect(jsonData.acceptRejectData.notAcceptedAttestorAnswers).to.eql(pm.environment.get('NotAcceptedAttestorAnswers'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for WF Queue ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"wFQueueID\", jsonData.queue.WFQueueID)",
+									"pm.test(\"not Accepted Attestor Answers\", function () {",
+									"    pm.expect(jsonData.queue.WFQueueID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.WFQueueID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"WFQueueID\");",
+									"    pm.expect(jsonData.queue.WFQueueID).to.eql(pm.environment.get('wFQueueID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"",
+									"////Assertion for Data Owner ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"dataOwnerID\", jsonData.queue.DataOwnerID)",
+									"pm.test(\"Data Owner ID\", function () {",
+									"    pm.expect(jsonData.queue.DataOwnerID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.DataOwnerID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"DataOwnerID\");",
+									"    pm.expect(jsonData.queue.DataOwnerID).to.eql(pm.environment.get('dataOwnerID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for KYG ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"kYGID\", jsonData.queue.KYGID)",
+									"pm.test(\"KYG ID\", function () {",
+									"    pm.expect(jsonData.queue.KYGID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.KYGID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"KYGID\");",
+									"    pm.expect(jsonData.queue.KYGID).to.eql(pm.environment.get('kYGID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Attestation Type ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"attestationTypeID\", jsonData.queue.AttestationTypeID)",
+									"pm.test(\"Attestation Type ID\", function () {",
+									"    pm.expect(jsonData.queue.AttestationTypeID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.AttestationTypeID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"AttestationTypeID\");",
+									"    pm.expect(jsonData.queue.AttestationTypeID).to.eql(pm.environment.get('attestationTypeID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for WF Status ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"wFStatusID\", jsonData.queue.WFStatusID)",
+									"pm.test(\"WF Status ID\", function () {",
+									"    pm.expect(jsonData.queue.WFStatusID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.WFStatusID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"WFStatusID\");",
+									"    pm.expect(jsonData.queue.WFStatusID).to.eql(pm.environment.get('wFStatusID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for WF Type ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"wFTypeID\", jsonData.queue.WFTypeID)",
+									"pm.test(\"WF Type ID\", function () {",
+									"    pm.expect(jsonData.queue.WFTypeID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.WFTypeID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"WFTypeID\");",
+									"    pm.expect(jsonData.queue.WFTypeID).to.eql(pm.environment.get('wFTypeID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for WF Engine State ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"wFEngineStateID\", jsonData.queue.WFEngineStateID)",
+									"pm.test(\"WF Engine State ID\", function () {",
+									"    pm.expect(jsonData.queue.WFEngineStateID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.WFEngineStateID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"WFEngineStateID\");",
+									"    pm.expect(jsonData.queue.WFEngineStateID).to.eql(pm.environment.get('wFEngineStateID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Document ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"documentID\", jsonData.queue.DocumentID)",
+									"pm.test(\"Document ID\", function () {",
+									"    pm.expect(jsonData.queue.DocumentID).to.not.be.null;",
+									"    pm.expect(jsonData.queue.DocumentID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"DocumentID\");",
+									"    pm.expect(jsonData.queue.DocumentID).to.eql(pm.environment.get('documentID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Modification Date////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"modificationDate\", jsonData.queue.ModificationDate)",
+									"pm.test(\"Modification Date\", function () {",
+									"    pm.expect(jsonData.queue.ModificationDate).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"ModificationDate\");",
+									"    pm.expect(jsonData.queue.ModificationDate).to.eql(pm.environment.get('modificationDate'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Creation Date////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"creationDate\", jsonData.queue.CreationDate)",
+									"pm.test(\"Creation Date\", function () {",
+									"    pm.expect(jsonData.queue.CreationDate).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"CreationDate\");",
+									"    pm.expect(jsonData.queue.CreationDate).to.eql(pm.environment.get('creationDate'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Comments////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"comments\", jsonData.queue.Comments)",
+									"pm.test(\"Comments \", function () {",
+									"    pm.expect(jsonData.queue.Comments).to.not.be.null;",
+									"    pm.expect(jsonData.queue.Comments).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"Comments\");",
+									"    pm.expect(jsonData.queue.Comments).to.eql(pm.environment.get('comments'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"var Items = pm.response.json().oracles;",
+									"",
+									"for (let i = 0; i < Items.length; i++) {",
+									"",
+									"////Assertion for Oracle Vendor Name////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"vendorName\", jsonData.oracles[i].VendorName)",
+									"pm.test(\"Oracle Vendor Name \", function () {",
+									"    pm.expect(jsonData.oracles[i].VendorName).to.not.be.null;",
+									"    pm.expect(jsonData.oracles[i].VendorName).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"VendorName\");",
+									"    pm.expect(jsonData.oracles[i].VendorName).to.eql(pm.environment.get('vendorName'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Icon////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"icon\", jsonData.oracles[i].Icon)",
+									"pm.test(\"Oracle Icon \", function () {",
+									"    pm.expect(jsonData.oracles[i].Icon).to.not.be.null;",
+									"    pm.expect(jsonData.oracles[i].Icon).to.be.a('string');",
+									"    pm.expect(pm.response.text()).to.include(\"Icon\");",
+									"    pm.expect(jsonData.oracles[i].Icon).to.eql(pm.environment.get('icon'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Description////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"description\", jsonData.oracles[i].Description)",
+									"pm.test(\"Oracle Description \", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Description\");",
+									"    pm.expect(jsonData.oracles[i].Description).to.eql(pm.environment.get('description'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Website////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"website\", jsonData.oracles[i].Website)",
+									"pm.test(\"Oracle Website \", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Website\");",
+									"    pm.expect(jsonData.oracles[i].Website).to.eql(pm.environment.get('website'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Vendor ID////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"vendorID\", jsonData.oracles[i].VendorID)",
+									"pm.test(\"Oracle Vendor ID \", function () {",
+									"    pm.expect(jsonData.oracles[i].VendorID).to.not.be.null;",
+									"    pm.expect(jsonData.oracles[i].VendorID).to.be.a('number');",
+									"    pm.expect(pm.response.text()).to.include(\"VendorID\");",
+									"    pm.expect(jsonData.oracles[i].VendorID).to.eql(pm.environment.get('vendorID'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle skills////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"Skills\", jsonData.oracles[i].skills)",
+									"pm.test(\"Oracle skills \", function () {",
+									"    pm.expect(jsonData.oracles[i].skills).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"skills\");",
+									"    pm.expect(jsonData.oracles[i].skills).to.eql(pm.environment.get('Skills'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Disabled Status////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"Disabled\", jsonData.oracles[i].isDisabled)",
+									"pm.test(\"Oracle Disabled Status\", function () {",
+									"    pm.expect(jsonData.oracles[i].isDisabled).to.not.be.null;",
+									"    pm.expect(jsonData.oracles[i].isDisabled).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"isDisabled\");",
+									"    pm.expect(jsonData.oracles[i].isDisabled).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Engines////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"Engines\", jsonData.oracles[i].engines)",
+									"pm.test(\"Oracle engines \", function () {",
+									"    pm.expect(jsonData.oracles[i].engines).to.not.be.null;",
+									"    pm.expect(jsonData.oracles[i].engines).to.be.a('array');",
+									"    pm.expect(pm.response.text()).to.include(\"engines\");",
+									"    pm.expect(jsonData.oracles[i].engines).to.eql(pm.environment.get('Engines'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Self Status////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"Self\", jsonData.oracles[i].IsSelf)",
+									"pm.test(\"Oracle Self Status\", function () {",
+									"    pm.expect(jsonData.oracles[i].IsSelf).to.not.be.null;",
+									"    pm.expect(jsonData.oracles[i].IsSelf).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"IsSelf\");",
+									"    pm.expect(jsonData.oracles[i].IsSelf).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle Utilization////////////////////////////////////////",
+									"",
+									"pm.environment.set(\"utilization\", jsonData.oracles[i].Utilization)",
+									"pm.test(\"Oracle Utilizations\", function () {",
+									"    pm.expect(jsonData.oracles[i].Utilization).to.not.be.null;",
+									"    pm.expect(pm.response.text()).to.include(\"Utilization\");",
+									"    pm.expect(jsonData.oracles[i].Utilization).to.eql(pm.environment.get('utilization'));",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"////Assertion for Oracle status Selected////////////////////////////////////////",
+									"",
+									"pm.test(\"Oracle status Selected\", function () {",
+									"    pm.expect(jsonData.oracles[i].status.selected).to.not.be.null;",
+									"    pm.expect(jsonData.oracles[i].status.selected).to.be.a('boolean');",
+									"    pm.expect(pm.response.text()).to.include(\"selected\");",
+									"    pm.expect(jsonData.oracles[i].status.selected).to.be.oneOf([true,false]);",
+									"});",
+									"",
+									"////////////////////////////////////////////////////////////////",
+									"",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "e09e23e6-6202-4bc4-88be-c3471f3f1e85",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"strictSSL": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{KYGAuth}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/attestation-process/chosen-flow/:DocID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"attestation-process",
+								"chosen-flow",
+								":DocID"
+							],
+							"variable": [
+								{
+									"id": "f5d50233-a175-4275-8729-929d9289226c",
+									"key": "DocID",
+									"value": "{{DOCID}}",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "c56992a8-e9c5-41d9-9a98-a50d9fa17fbb",
+							"name": "response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/attestation-process/chosen-flow/:DocID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"attestation-process",
+										"chosen-flow",
+										":DocID"
+									],
+									"variable": [
+										{
+											"key": "DocID"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				}
+			],
+			"_postman_id": "0a02d941-5da2-4280-95f5-3bd36b344c11",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{KYGAuth}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ebe3ae6b-e0b4-4e1d-9d84-1a45f0da6a27",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "43f145d4-cd45-42af-a7e7-9ee2d8c2e1db",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
