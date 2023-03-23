@@ -1,4 +1,12 @@
+# README
+
+
+# Swagger Link
+https://ec2-18-225-36-233.us-east-2.compute.amazonaws.com/api/
+
+
 # KYG Process Flow
+
 # Installation
 Install Postman
 
